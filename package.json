@@ -1,0 +1,22 @@
+{
+  "name": "webapp-using-webpack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:old": "webpack-dev-server --mode development --entry ./src/js/app.js --output-filename ./dist/bundle.js",
+    "build:prod:old": "webpack --mode production ./src/js/app.js -o ./dist/bundle.js",
+    "build": "webpack-dev-server --mode development",
+    "build:prod": "webpack --mode production"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^1.0.0",
+    "style-loader": "^0.22.1",
+    "webpack": "^4.17.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.6"
+  }
+}
