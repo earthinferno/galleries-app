@@ -16,6 +16,12 @@ module.exports = {
     module: {
         rules: [
             {
+                enforce: "pre",
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: ['babel-loader','eslint-loader']
+            },            
+            {
                 test: /\.js$/,
                 use: [
                     {
@@ -54,7 +60,7 @@ module.exports = {
     plugins: [
         ExtractPlugin,
         new HtmlWebPackPlugin({
-            template: 'src/index.html'
+            template: './src/index.html'
         }),
         new CleanWebPackPlugin(['dist'])
     ]
