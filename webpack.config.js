@@ -4,6 +4,7 @@ var ExtractPlugin = new Extracttextplugin({
     filename: 'main.css'
 });
 var HtmlWebPackPlugin = require('html-webpack-plugin');
+var CleanWebPackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
     entry: './src/js/app.js',
@@ -54,6 +55,7 @@ module.exports = {
         ExtractPlugin,
         new HtmlWebPackPlugin({
             template: 'src/index.html'
-        })
+        }),
+        new CleanWebPackPlugin(['dist'])
     ]
 }
