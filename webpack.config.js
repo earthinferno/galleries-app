@@ -1,5 +1,9 @@
 var path = require('path');
-var webpack = require('webpack');
+var extracttestplugin = require('extract-text-webpack-plugin');
+//var extracttestplugin = require('mini-css-extract-plugin');
+var extractPlugin = new extracttestplugin({
+    filename: 'main.css'
+})
 
 module.exports = {
     entry: './src/js/app.js',
@@ -11,15 +15,25 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.css$/,
+                test: /\.js$/,
                 use: [
-                    'style-loader',
-                    'css-loader'
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: ['env']
+                        }
+                    }
                 ]
+            },
+            {
+                test: /\.scss$/,
+                use: extractPlugin.extract({
+                    use: ['css-loader', 'scss-loader']
+                })
             }
         ]
     },
     plugins: [
-       // new  webpack.UglifyJsPlugin({})
+        extractPlugin
     ]
 }
