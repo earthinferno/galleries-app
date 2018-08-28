@@ -1,16 +1,16 @@
 var path = require('path');
-var extracttestplugin = require('extract-text-webpack-plugin');
-//var extracttestplugin = require('mini-css-extract-plugin');
-var extractPlugin = new extracttestplugin({
+var Extracttextplugin = require('extract-text-webpack-plugin');
+var ExtractPlugin = new Extracttextplugin({
     filename: 'main.css'
-})
+});
+var HtmlWebPackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: './src/js/app.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js',
-        publicPath: '/dist'
+        // publicPath: '/dist'
     },
     module: {
         rules: [
@@ -27,13 +27,33 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                use: extractPlugin.extract({
+                use: ExtractPlugin.extract({
                     use: ['css-loader', 'sass-loader']
                 })
+            },
+            {
+                test: /\.html$/,
+                use: ['html-loader']
+            },
+            {
+                test: /\.(jpg|png)/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'img/',
+                            publicPath: 'img/'
+                        }
+                    }
+                ]
             }
         ]
     },
     plugins: [
-        extractPlugin
+        ExtractPlugin,
+        new HtmlWebPackPlugin({
+            template: 'src/index.html'
+        })
     ]
 }
