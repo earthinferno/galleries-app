@@ -1,7 +1,7 @@
 {
-  "name": "webapp-using-webpack",
+  "name": "galleries",
   "version": "1.0.0",
-  "description": "",
+  "description": "Encapsulate memories in concise collections of media.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -15,6 +15,7 @@
     "babel-eslint": "^9.0.0",
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.0",
     "eslint": "^5.4.0",
@@ -29,5 +30,9 @@
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.6"
+  },
+  "dependencies": {
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
   }
 }
