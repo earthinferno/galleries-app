@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 
 export default class LikeButton extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
-          liked: false,
+          liked: this.props.liked,
       };
   }
   likedLabel() {

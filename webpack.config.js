@@ -7,7 +7,7 @@ var HtmlWebPackPlugin = require('html-webpack-plugin');
 var CleanWebPackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
-    entry: './src/js/app.js',
+    entry: './src/js/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js',
