@@ -1,3 +1,5 @@
+//import fetchImages from './server-actions-stub'
+
 let nextImageId = 0;
 export const addImage = (url,comment,liked) => ({
     type: 'ADD_IMAGE',
@@ -5,5 +7,4 @@ export const addImage = (url,comment,liked) => ({
     url,
     comment,
     liked,
-})
-
+});
