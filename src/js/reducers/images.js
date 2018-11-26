@@ -1,14 +1,4 @@
-/*const initialState = {
-  images: [{
-    id: 0,
-    url: "./../../src/img/index.png",
-    comment: "Peace man",
-    liked:  false
-  }]
-}*/
-
-const initialState = [];
-const images = (state = initialState, action) => {
+const images = (state = [], action) => {
   switch (action.type) {
     case 'ADD_IMAGE':
       return [
@@ -20,8 +10,18 @@ const images = (state = initialState, action) => {
           liked: action.liked,
         }
       ]
-      default: 
-        return state
+    case 'FETCH_IMAGES':
+      return [
+        ...state,
+          action.images.map(image => ({
+          id: image.id,
+          url: image.url,
+          comment: image.comment,
+          liked: image.liked,
+        }))
+      ]
+    default: 
+       return state
   }
 }
 

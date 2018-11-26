@@ -6,32 +6,10 @@ import {
 } from './../actions';
 import { fetchImages } from './../actions/server-actions-stub';
 
-const images = 
-  [
-    {
-        id: 1,
-        url: "./../../src/img/index.png",
-        comment: "First Image",
-        liked: false,
-    },
-    {
-      id: 1,
-      url: "./../../src/img/index.png",
-      comment: "First Image",
-      liked: false,
-    },
-    {
-      id: 1,
-      url: "./../../src/img/index.png",
-      comment: "First Image",
-      liked: false,
-    }
-  ]
-
 class Images extends React.Component {
 
   render() {
-    const images = this.props.images.images;
+    const images = this.props.images[0];
     if (images == null)
     {
       return(null);
@@ -51,12 +29,13 @@ class Images extends React.Component {
 //     image: dispatch(addImage("./../../src/img/index.png","Peace man", true))
 //   });
 const mapDispacthtoProps = (dispatch) => ({
-    images: dispatch(fetchImages())
+    imageDispatch: dispatch(fetchImages())
     }); 
 
 const mapStateToProps = (state) => ({
-    images: state.images
+    images : state.images
   });
+
 
 export default connect(
     mapStateToProps,
