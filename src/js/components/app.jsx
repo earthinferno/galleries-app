@@ -1,12 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-//import ImageDisplay from './images.js';
-import ImageDisplay from './images.jsx';
+import { Images } from './images.jsx';
 
-const App = () => {
-    return <div>
-        <ImageDisplay />
-    </div>;
-}
-
-export default App
+export default class App extends React.Component {
+    render() {
+      return (
+        <div><Images images /></div>
+      );      
+    }
+  }
