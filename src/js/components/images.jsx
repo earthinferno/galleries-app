@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from './image.jsx';
+import AddImage from './add-image.jsx';
 import { ImageDataService } from './data-source'
 
 export class Images extends React.Component {
@@ -18,11 +19,15 @@ export class Images extends React.Component {
     }
 
     return (
+      <div>
         <div>
           {this.state.images.map( image => (
             <Image key={image.id} url={image.url} comment={image.comment} like={image.liked}/>
           ))}
         </div>
+        <p></p>
+        <AddImage/>
+      </div>
     );      
   }
 }
