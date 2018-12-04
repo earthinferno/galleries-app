@@ -8,8 +8,20 @@ export class Images extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      images : ImageDataService.getImageData(),
+      images : this.ImageData,
     }
+
+    this.handleImagesChange = this.handleImagesChange.bind(this);
+  }
+
+  componentDidMount() {
+    ImageDataService.getImageData(imageData => 
+      this.setState({images: imageData})
+    );
+  }
+
+  handleImagesChange(imageData) {
+    this.setState({images: imageData});
   }
 
   render() {
@@ -26,7 +38,7 @@ export class Images extends React.Component {
           ))}
         </div>
         <p></p>
-        <AddImage/>
+        <AddImage onImagesChange={this.handleImagesChange} />
       </div>
     );      
   }

@@ -1,10 +1,10 @@
 import React from  'react';
+import { ImageDataService } from './data-source'
 
 export default class AddImage extends React.Component{
   constructor(props)
   {
     super(props);
-    //this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fileInput = React.createRef();
   }
@@ -12,15 +12,16 @@ export default class AddImage extends React.Component{
   handleSubmit(event)
   {
     event.preventDefault();
-    console.log(this.fileInput.current.files[0].name);
-    //console.log(this.fileInput.current.files[0].);
+
+    var files = new FormData(this.form);
+    files.append('Files[]',this.fileInput.current.files[0]);
+    
+    // ImageDataService.addImage(files, data => 
+    // this.setState({images: data}));
+    ImageDataService.addImage(files, data => 
+      this.props.onImagesChange(data));
   }
 
-  handleChange(fileList)
-  {
-    console.log(fileList);
-  }
-  //<input type="file" onChange={ (e) => this.handleChange(e.target.files)}/>
   render(){
     return (
       <form onSubmit={this.handleSubmit}>
