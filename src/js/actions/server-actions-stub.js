@@ -1,22 +1,24 @@
+import imagefile from '../../images/index.png';
+
 // stubbed data
 let imageId = 0;
 const images = 
   [
     {
       id: imageId++,
-      url: "./../../src/img/index.png",
+      url: {imagefile},
       comment: "First Image",
       liked: false,
     },
     {
       id: imageId++,
-      url: "./../../src/img/index.png",
+      url: {imagefile},
       comment: "First Image",
       liked: false,
     },
     {
       id: imageId++,
-      url: "./../../src/img/index.png",
+      url: {imagefile},
       comment: "First Image",
       liked: false,
     }
