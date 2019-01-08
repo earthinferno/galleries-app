@@ -1,3 +1,5 @@
+  import {baseapiurl} from '../config/settings.js';
+  
   class ImageDataService {
     static getImageDatStub() {
       this.imageId = 0;
@@ -27,7 +29,7 @@
     }
 
     static getImageData(callback) {
-      $.get("http://localhost:60782/api/images", function(data, status){
+      $.get(baseapiurl + "/api/images", function(data, status){
         callback(data.results);
       });
     }
@@ -37,7 +39,7 @@
       //'http://localhost:60782/api/images
 
       $.ajax({
-        url: 'http://localhost:60782/api/images',
+        url: '{baseapiurl}/api/images',
         data: data,
         cache: false,
         contentType: false,

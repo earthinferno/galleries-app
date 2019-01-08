@@ -22,7 +22,7 @@ namespace GalleriesServer.Controllers
             {
                 new Image{Id = _imageId++, Comment="First Image", Liked = true, Url="./../../src/img/index.png" },
                 new Image{Id = _imageId++, Comment="Second Image", Liked = true, Url="./../../src/img/index.png" },
-                new Image{Id = _imageId++, Comment="Third Image", Liked = true, Url="./../../src/img/index.png" }
+                new Image{Id = _imageId++, Comment="tres bonn Image", Liked = true, Url="./../../src/img/index.png" }
             };
         }
 
