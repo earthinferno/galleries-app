@@ -25,6 +25,7 @@ namespace GalleriesServer
         {
             services.AddMvc();
             services.AddCors();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +42,9 @@ namespace GalleriesServer
                 builder.WithOrigins("https://galleries247b.azurewebsites.net"));
 
             app.UseMvc();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
         }
     }
 }
