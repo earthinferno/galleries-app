@@ -39,7 +39,7 @@
       //'http://localhost:60782/api/images
 
       $.ajax({
-        url: '{baseapiurl}/api/images',
+        url: baseapiurl + '/api/images',
         data: data,
         cache: false,
         contentType: false,
