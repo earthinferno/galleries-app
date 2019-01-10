@@ -35,9 +35,6 @@
     }
 
     static addImage(data, callback) {
-      //https://localhost:44320/
-      //'http://localhost:60782/api/images
-
       $.ajax({
         url: baseapiurl + '/api/images',
         data: data,
