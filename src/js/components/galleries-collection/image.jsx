@@ -1,6 +1,6 @@
 import React from 'react';
 import LikeButton from './like-button.jsx';
-import imagefile from '../../images/index.png';
+import imagefile from '../../../images/index.png';
 //<img src={this.props.url}></img>
 export default class Image extends React.Component {
   render() {
