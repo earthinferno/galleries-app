@@ -19,7 +19,7 @@ ReactDOM.render(
 
 ReactDOM.render((
     <Router history={history}>
-        <App history={history}/>
+        <App />
     </Router>
     ),
     document.getElementById('app-root')

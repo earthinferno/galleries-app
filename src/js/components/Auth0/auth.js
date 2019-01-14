@@ -1,14 +1,13 @@
 import auth0 from 'auth0-js';
 
-class Auth {
-  constructor() {
+export default class Auth {
+  constructor(uri) {
     this.auth0 = new auth0.WebAuth({
       // the following three lines MUST be updated
       domain: '88galleries88state.eu.auth0.com',
       audience: 'https://88galleries88state.eu.auth0.com/userinfo',
       clientID: 'ySDhFb8l20IORZItgTf5v5AjVfbU6WVj',
-      redirectUri: 'https://galleries247b.azurewebsites.net/callback',
-      //redirectUri: 'http://localhost:8080/callback',
+      redirectUri: uri + '/callback',
       responseType: 'id_token',
       scope: 'openid profile'
     });
@@ -32,7 +31,7 @@ class Auth {
     return new Date().getTime() < this.expiresAt;
   }
 
-  signIn() {
+  signIn(history) {
     this.auth0.authorize();
   }
 
@@ -60,7 +59,7 @@ class Auth {
   }
 }
 
-const auth0Client = new Auth();
+//const auth0Client = new Auth();
+//export default auth0Client;
 
-export default auth0Client;
 

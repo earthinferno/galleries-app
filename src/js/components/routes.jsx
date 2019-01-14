@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom';
 import Images from './galleries-collection/images.jsx';
 import Welcome from './welcome-page/welcome.jsx';
 import Callback from './Auth0/callback.jsx';
-import auth0Client from './Auth0/auth';
+import { auth0Client } from '../globals';
 
 
 export default class MainRoutes extends React.Component {
@@ -22,11 +22,11 @@ export default class MainRoutes extends React.Component {
       </div>
 */
 
-  handleAuthentication (nextState, replace) 
+  handleAuthentication (props, replace) 
   {
     if (/access_token|id_token|error/.test(nextState.location.hash)) 
     {
-      auth0Client.handleAuthentication(nextState.history);
+      auth0Client.handleAuthentication(props.history);
     }
   }
   //<Route exact path="/home" render={(props) => <Images auth={auth} {...props} />} />

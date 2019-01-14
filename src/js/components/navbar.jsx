@@ -1,13 +1,16 @@
 import React from 'react';
 //import { Navbar, Button } from 'react-bootstrap';
 import {Link, withRouter} from 'react-router-dom';
-import auth0Client from './Auth0/auth';
-
+import { auth0Client } from '../globals';
 
 function NavBar(props) {
     const signOut = () => {
         auth0Client.logout();
         props.history.replace('/');
+    };
+
+    const login = () => {
+        auth0Client.login(props.history);
     };
 
     return (
@@ -17,7 +20,7 @@ function NavBar(props) {
         </Link>
         {
             !auth0Client.isAuthenticated() &&
-            <button className="btn btn-dark" onClick={auth0Client.login}>Sign In</button>
+            <button className="btn btn-dark" onClick={() => {login()}}>Sign In</button>
         }
         {
             auth0Client.isAuthenticated() &&
