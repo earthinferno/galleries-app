@@ -1,4 +1,4 @@
-  import {baseapiurl} from '../config/settings.js';
+  import {baseapiurl} from '../globals';
   
   class ImageDataService {
     static getImageDatStub() {

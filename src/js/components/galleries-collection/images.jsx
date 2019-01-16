@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from './image.jsx';
 import AddImage from './add-image.jsx';
-import { ImageDataService } from './data-source'
+import { ImageDataService } from '../data-source'
 
-export class Images extends React.Component {
+export default class Images extends React.Component {
 
   constructor(props) {
     super(props);
