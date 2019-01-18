@@ -34,10 +34,10 @@
       });
     }
 
-    static addImage(data, callback) {
+    static addImage(files, metatadata, callback) {
       $.ajax({
         url: baseapiurl + '/api/images',
-        data: data,
+        data: files,
         cache: false,
         contentType: false,
         processData: false,

@@ -7,24 +7,33 @@ export default class AddImage extends React.Component{
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fileInput = React.createRef();
+    this.form = React.createRef;
   }
 
   handleSubmit(event)
   {
     event.preventDefault();
 
-    var files = new FormData(this.form);
-    files.append('Files[]',this.fileInput.current.files[0]);
+    var mediaFiles = new FormData(this.form);
+    mediaFiles.append('File',this.fileInput.current.files[0]);
+    mediaFiles.append('Comment','This is my comment');
+
+    //var mediaFiles = new FormData(this.form);
+
+
+    var metadata = {
+      comment: 'this is a comment'
+    }    
     
     // ImageDataService.addImage(files, data => 
     // this.setState({images: data}));
-    ImageDataService.addImage(files, data => 
+    ImageDataService.addImage(mediaFiles, metadata, data => 
       this.props.onImagesChange(data));
   }
 
   render(){
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit} ref={this.form}>
         <label> Upload file: 
           <input type="file" ref={this.fileInput} />
         </label>

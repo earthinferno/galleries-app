@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GalleriesServer.Data
+namespace GalleriesServer.Models
 {
-    public class Image
+    public class BlobItem
     {
         public int Id { get; set; }
-        public string Url { get; set; }
+        public string Uri { get; set; }
         public string Comment { get; set; }
         public bool Liked { get; set; }
+        public string BlobName { get; set; }
     }
 }
