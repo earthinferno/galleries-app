@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GalleriesServer.Models
 {
-    public class GalleriesDbContext : DbContext
+    public class GalleriesDbContext : DbContext, IGalleriesDbContext
     {
 
         /// <summary>

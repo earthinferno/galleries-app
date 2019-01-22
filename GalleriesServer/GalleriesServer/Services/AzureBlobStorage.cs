@@ -9,7 +9,7 @@ using GalleriesServer.Models;
 
 namespace GalleriesServer.Services
 {
-    public class AzureBlobStorage : IAzureBlobStorage
+    public class AzureBlobStorage : IMediaStorage
     {
         private readonly CloudStorageAccount _storageAccount;
         private readonly AzureBlobSettings _blobSettings;
@@ -19,24 +19,24 @@ namespace GalleriesServer.Services
             _blobSettings = blobSettings;
 
         }
-        private async Task<CloudBlobContainer> GetContainerAsync()
+        private async Task<CloudBlobContainer> GetContainerAsync(string containerName)
         {
             var blobClient = _storageAccount.CreateCloudBlobClient();
-            var blobContainer = blobClient.GetContainerReference(_blobSettings.ContainerName);
+            var blobContainer = blobClient.GetContainerReference(containerName);
             await blobContainer.CreateIfNotExistsAsync();
 
             return blobContainer;
         }
 
-        private async Task<CloudBlockBlob> GetBlockBlobAsync(string blobName)
+        private async Task<CloudBlockBlob> GetBlockBlobAsync(string containerName, string blobName)
         {
-            var container = await GetContainerAsync();
+            var container = await GetContainerAsync(containerName);
             return container.GetBlockBlobReference(blobName);
         }
 
-        private async Task<List<AzureBlobItem>> GetBlobListAsync(bool useFlat = true)
+        private async Task<List<AzureBlobItem>> GetBlobListAsync(string containerName, bool useFlat = true)
         {
-            var container = await GetContainerAsync();
+            var container = await GetContainerAsync(containerName);
             var list = new List<AzureBlobItem>();
             BlobContinuationToken token = null;
 
@@ -53,11 +53,13 @@ namespace GalleriesServer.Services
             return list;
         }
 
-        private async Task<CloudBlockBlob> getBlobREferenceAsync(string imageId)
+        
+        private async Task<CloudBlockBlob> getBlobREferenceAsync(string containerName, string blobReference)
         {
-            var container = await GetContainerAsync();
-            return container.GetBlockBlobReference(imageId);
+            var container = await GetContainerAsync(containerName);
+            return container.GetBlockBlobReference(blobReference);
         }
+        
 
         private static SharedAccessBlobPolicy getSAS()
         {
@@ -69,46 +71,36 @@ namespace GalleriesServer.Services
             };
         }
 
-        public async Task UploadAsync(string blobName, Stream stream)
+        public async Task UploadAsync(string containerName, string itemName, Stream stream)
         {
-            var blob = await GetBlockBlobAsync(blobName);
+            var blob = await GetBlockBlobAsync(containerName, itemName);
             await blob.UploadFromStreamAsync(stream);
         }
 
-        //public async Task<MemoryStream> DownloadAsync(string blobName)
-        //{
-        //    throw new ApplicationException("Please access the storage resource directly.");
-        //}
-
-        public async Task<List<AzureBlobItem>> ListAsync()
+        /* public async Task<List<string>> ListFolderAsync(string containerName)
         {
-            return await GetBlobListAsync();
-        }
-
-        public async Task<List<string>> ListFolderAsync()
-        {
-            var list = await GetBlobListAsync();
-            return list.Where(i => !string.IsNullOrEmpty(i.Folder))
-                .Select(i => i.Folder)
+            var list = await GetBlobListAsync(containerName);
+            return list.Where(i => !string.IsNullOrEmpty(i.Container))
+                .Select(i => i.Container)
                 .Distinct()
                 .OrderBy(i => i)
                 .ToList();
-        }
+        }*/
 
 
-        public async Task<string> BlobUri(string baseUri, string blobName)
+        public async Task<string> ItemUri(string baseUri, string containerName, string itemName)
         {
             SharedAccessBlobPolicy sasPolicy = getSAS();
 
-            var blob = await getBlobREferenceAsync(blobName);
+            var blob = await getBlobREferenceAsync(containerName, itemName);
             var sas = blob.GetSharedAccessSignature(sasPolicy);
-            return $"{baseUri}images/{blobName}{sas}";
+            return $"{baseUri}images/{itemName}{sas}";
         }
 
-        public async Task<List<string>> GetBlobUris(string baseUri)
+        public async Task<List<string>> GetAllMediaUris(string baseUri, string containerName)
         {
             var sasPolicy = getSAS();
-            var list = await GetBlobListAsync();
+            var list = await GetBlobListAsync(containerName);
             return list.Where(i => !string.IsNullOrEmpty(i.BlobName) && i.IsBlockBlob)
                 .Select(i => $"{baseUri}images/{i.BlobName}{i.BlockBlobSharedAccessSignature}")
                 .Distinct()
@@ -117,6 +109,7 @@ namespace GalleriesServer.Services
 
         }
 
+        /*
         public async Task<List<string>> GetBlobImageId()
         {
             var list = await GetBlobListAsync();
@@ -126,10 +119,11 @@ namespace GalleriesServer.Services
                 .OrderBy(i => i)
                 .ToList();
         }
+        */
 
-        public async Task<List<BlobItem>> GetImageBlobs(string baseUri)
+        public async Task<List<BlobItem>> GetMediaItems(string baseUri, string containerName)
         {
-            var list = await GetBlobListAsync();
+            var list = await GetBlobListAsync(containerName);
             return list.Where(i => !string.IsNullOrEmpty(i.BlobName) && i.IsBlockBlob)
                 .Select(i => new BlobItem() { Uri = $"{baseUri}images/{i.BlobName}{i.BlockBlobSharedAccessSignature}", BlobName = i.BlobName })
                 .Distinct()

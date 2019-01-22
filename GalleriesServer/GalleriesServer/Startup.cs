@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
 
 namespace GalleriesServer
 {
@@ -34,7 +36,19 @@ namespace GalleriesServer
                             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddTransient<OwnerService>();
-            services.AddScoped<ImageStore>();
+            services.AddTransient<MediaContainerService>();
+            services.AddTransient<MediaItemService>();
+            services.AddScoped<IImageStore, ImageStore>();
+
+            services.AddScoped<IMediaStorage>(factory =>
+            {
+                var settings = new AzureBlobSettings(
+                    storageAccount: Configuration["Blob_StorageAccount"],
+                    storageKey: Configuration["Blob_StorageKey"]);
+                var storageAccount = new CloudStorageAccount(new StorageCredentials(settings.StorageAccount, settings.StorageKey), false);
+                return new AzureBlobStorage(storageAccount, settings);
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

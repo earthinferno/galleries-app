@@ -7,7 +7,8 @@ namespace GalleriesServer.Models
 {
     public class GalleryItem
     {
-        public MediaItem MediaItem { get; set; }
-        public int MediaContainerID { get; set; }
+        public MediaItem Item { get; set; }
+        public MediaContainer Gallery { get; set; }
+        public Owner User { get; set; }
     }
 }

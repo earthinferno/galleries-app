@@ -22,7 +22,7 @@ namespace GalleriesServer.Services
         public string BlobName => IsBlockBlob ? ((CloudBlockBlob)Item).Name :
             IsPageBlob ? ((CloudPageBlob)Item).Name :
             IsDirectory ? ((CloudBlobDirectory)Item).Prefix : "";
-        public string Folder => BlobName.Contains("/") ? BlobName.Substring(BlobName.LastIndexOf("/" + 1)) : BlobName;
+        public string Container => BlobName.Contains("/") ? BlobName.Substring(BlobName.LastIndexOf("/" + 1)) : BlobName;
 
         //public string BlockBlobSharedAccessSignature => Item.GetType() == typeof(CloudBlockBlob) ? ((CloudBlockBlob)Item).GetSharedAccessSignature(_sasPolicy) : null;
 

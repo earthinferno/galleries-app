@@ -1,50 +1,46 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.WindowsAzure.Storage.Auth;
-using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using GalleriesServer.Models;
 
 namespace GalleriesServer.Services
 {
-    public class ImageStore
+    public class ImageStore : IImageStore
     {
-        //string baseUri = "https://techtasticstorage.blob.core.windows.net/";
         string _baseUri;
         IConfiguration _configuration;
 
 
-        private readonly IAzureBlobStorage _blobStorage;
+        private readonly IMediaStorage _imageStorage;
 
-        public ImageStore(IAzureBlobStorage azureBlobStorage, IConfiguration configuration)
+        public ImageStore(IMediaStorage mediaStorage, IConfiguration configuration)
         {
-            _blobStorage = azureBlobStorage;
+            _imageStorage = mediaStorage;
             _configuration = configuration;
-            _baseUri = _configuration["Blob_BaseUri"];
+            _baseUri = _configuration["Azure_Blob_BaseUri"];
         }
-        public async Task<string> SaveImage(Stream imageStream)
+        public async Task<string> SaveImage(Stream imageStream, string userAccount)
         {
             var imageId = Guid.NewGuid().ToString();
-            await _blobStorage.UploadAsync(imageId, imageStream);
+            await _imageStorage.UploadAsync(userAccount, imageId, imageStream);
             return imageId;
         }
 
-        public string UriFor(string imageId)
+        public string UriFor(string container, string item)
         {
-            return _blobStorage.BlobUri(_baseUri, imageId).Result;
+            return _imageStorage.ItemUri(_baseUri, container, item).Result;
         }
 
-        public List<string> GetImageUris()
+        public List<string> GetImageUris(string container)
         {
-            return _blobStorage.GetBlobUris(_baseUri).Result;
+            return _imageStorage.GetAllMediaUris(_baseUri, container).Result;
         }
 
-        public List<BlobItem> GetImageBlobs()
+        public List<BlobItem> GetImages(string container)
         {
-            return _blobStorage.GetImageBlobs(_baseUri).Result;
+            return _imageStorage.GetMediaItems(_baseUri, container).Result;
         }
 
     }

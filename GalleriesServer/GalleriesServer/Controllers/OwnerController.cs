@@ -34,15 +34,7 @@ namespace GalleriesServer.Controllers
         [HttpGet("{userId}")]
         public async Task<ActionResult<Owner>> GetOwner(string userId)
         {
-            var owner = await _dbContext.Owners.Where(a => a.ExternalUserId == userId).ToListAsync();
-            if (owner == null || owner.Count() == 0)
-            {
-                return NotFound();
-            }
-
-            //Just in case of duplicates
-            //TODO: in case of duplicates is a problem: THERE MUST NOT BE DUPLICATES!
-            return owner.First();
+            return await _ownerService.GetOwner(userId);
         }
 
         /// <summary>
@@ -54,8 +46,9 @@ namespace GalleriesServer.Controllers
         [HttpPost]
         public async Task<ActionResult<Owner>> PostOwner(Owner owner)
         {
-            _dbContext.Owners.Add(owner);
-            await _dbContext.SaveChangesAsync();
+            //_dbContext.Owners.Add(owner);
+            //await _dbContext.SaveChangesAsync();
+            await _ownerService.AddOwner(owner);
             return CreatedAtAction("GetOwner", new { userId = owner.ExternalUserId }, owner);
         }
 

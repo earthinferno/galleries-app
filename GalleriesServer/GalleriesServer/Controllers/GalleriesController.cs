@@ -90,10 +90,10 @@ namespace GalleriesServer.Controllers
         [HttpPost]
         public async Task<ActionResult<MediaContainer>> PostGallery(Gallery galleryItem)
         {
-            var owner = await _dbContext.Owners.Where(a => a.ExternalUserId == galleryItem.UserId).ToListAsync();
+            var owner = await _ownerService.GetOwner(galleryItem.UserId);
             //get rid of next code is a security risk, we need to inject an additional registration page on signup to collect the owner
             // details. But for now just create an owner record if one does not exist.
-            if (owner.Count() == 0)
+            if (owner == null)
             {
                 _ownerService.AddOwner("", "Auth0", galleryItem.UserId, "", "");
                 /*RedirectToAction("PostOwner", "OwnerController", new Owner()
@@ -105,14 +105,14 @@ namespace GalleriesServer.Controllers
                     LastName = "Unknown"
                 });*/
                   
-                owner = await _dbContext.Owners.Where(a => a.ExternalUserId == galleryItem.UserId).ToListAsync();
+                owner = await _ownerService.GetOwner(galleryItem.UserId);
             }
 
             _dbContext.MediaContainers.Add(new MediaContainer() {
                 CreatedDate = galleryItem.CreatedDate,
                 Name = galleryItem.Name,
                 Description = galleryItem.Description,
-                Owner = owner.First()
+                Owner = owner
             });
             await _dbContext.SaveChangesAsync();
 

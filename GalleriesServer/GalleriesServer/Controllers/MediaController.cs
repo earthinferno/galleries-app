@@ -18,16 +18,24 @@ namespace GalleriesServer.Controllers
     public class MediaController : Controller
     {
         private readonly GalleriesDbContext _dbContext;
+        private readonly IImageStore _imageStore;
         private readonly OwnerService _ownerService;
-        private readonly ImageStore _imageStore;
+        private readonly MediaContainerService _containerService;
+        private readonly MediaItemService _itemService;
 
 
-        public MediaController(GalleriesDbContext dbContext, OwnerService ownerService, ImageStore imageStore)
+        public MediaController(
+            GalleriesDbContext dbContext,
+            IImageStore imageStore,
+            OwnerService ownerService, 
+            MediaContainerService containerService,
+            MediaItemService itemService)
         {
-            _dbContext = dbContext;
-            _ownerService = ownerService;
+            _dbContext = dbContext; // as GalleriesDbContext;
             _imageStore = imageStore;
-
+            _ownerService = ownerService;
+            _containerService = containerService;
+            _itemService = itemService;
         }
 
         /// <summary>
@@ -39,9 +47,8 @@ namespace GalleriesServer.Controllers
         [HttpGet("{galleryId}")]
         public async Task<ActionResult<IEnumerable<MediaItem>>> GetItems(int galleryId)
         {
-            //var items = await _dbContext.MediaContainers.Where(a => a.ID == galleryId).Select(a => a.MediaItems).ToListAsync();   
-            var items = await _dbContext.MediaContainers.Where(a => a.ID == galleryId).Select(a => a.MediaItems).FirstAsync() as List<MediaItem>;
-            return items;
+            var gallery = await _dbContext.MediaContainers.FindAsync(galleryId);
+            return Ok(gallery.MediaItems as List<MediaItem>);
         }
 
 
@@ -54,14 +61,41 @@ namespace GalleriesServer.Controllers
         public async Task<ActionResult<MediaItem>> Upload(IFormCollection form)
         {
 
+            var userFolder = form["UserFolder"];
             var comment = form["Comment"];
+            var userId = form["UserId"];
 
             var filepath = "";
             var blobName = "";
-            int galleryId;
-            if (int.TryParse(form["GalleryId"], out galleryId))
+
+            if (string.IsNullOrEmpty(userFolder) || string.IsNullOrEmpty(userId))
             {
-                foreach (var file in form.Files)
+                return BadRequest();
+            }
+
+            // return bad request if the owener does not exist.
+            var owner = await _ownerService.GetOwner(userId);
+            if (owner == null)
+            {
+                return BadRequest();
+            }
+
+            // Return badrequest if the gallery doesn't exist.
+            var mediaContainer = await _containerService.GetMediaContainerByName(owner, userFolder);
+            if (mediaContainer == null)
+            {
+                return BadRequest();
+            }
+
+            // Return badrequest if all upload files have 0 size.
+            if (form.Files.Count > 0 && form.Files.Where(a => a.Length > 0).Count() == 0)
+            {
+                return BadRequest();
+            }
+
+            foreach (var file in form.Files)
+            {
+                try
                 {
                     if (file.Length > 0)
                     {
@@ -69,30 +103,21 @@ namespace GalleriesServer.Controllers
                         filepath = Path.GetTempPath() + file.FileName;
                         using (var stream = new FileStream(filepath, FileMode.Create))
                         {
-                            //await file.CopyToAsync(stream);
-                            blobName = await _imageStore.SaveImage(stream);
+                            blobName = await _imageStore.SaveImage(stream, userFolder);
                         }
 
-                        // save the meta data associated with the blob. 
-                        // There will be only 1 file so this return is okay
-                        return await SaveMetaData(new GalleryItem
-                        {
-                            MediaItem = new MediaItem { Comment = comment, FileName = file.Name, ImageUri = blobName },
-                            MediaContainerID = galleryId
-                        });
+                        // Create the metadata about the added media item.
+                        _itemService.AddMediaItem(mediaContainer, new MediaItem() { Comment = comment, FileName = file.FileName, ImageUri = blobName });
                     }
                 }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
             }
-            return BadRequest();
-            //return Ok(new { results = images });
-        }
 
-
-        private async Task<ActionResult<MediaItem>> SaveMetaData(GalleryItem item)
-        {
-            _dbContext.MediaContainers.Where(a => a.ID == item.MediaContainerID).First().MediaItems.Add(item.MediaItem);
             await _dbContext.SaveChangesAsync();
-            return CreatedAtAction("GetItems", new { galleryId = item.MediaContainerID }, item);
+            return CreatedAtAction("GetItems", new { galleryId = mediaContainer.ID, owner = mediaContainer.Owner.ID}, mediaContainer.MediaItems);
         }
 
         /// <summary>
