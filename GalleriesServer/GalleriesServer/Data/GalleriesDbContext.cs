@@ -35,7 +35,10 @@ namespace GalleriesServer.Models
             base.OnModelCreating(modelBuilder);
 
             // Affect some additionall configuration of the database
-            modelBuilder.Entity<Owner>().HasIndex(a => a.ExternalUserId);
+            // N.B Entity Framework does not support these constraints directly. They are enforced by the provider so in memory checks 
+            // (before hitting database or unit testing with inmemory db) must be done in addtion to EF.
+            modelBuilder.Entity<Owner>().HasIndex(a => a.ExternalUserId).IsUnique(); //this must be unique as it is searched upon
+            modelBuilder.Entity<Owner>().HasIndex(a => a.EmailAddress).IsUnique(); // this must be unique as we only support one account per email address
         }
     }
 }

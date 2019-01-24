@@ -24,14 +24,6 @@ namespace GalleriesServer.Controllers
             _ownerService = ownerService;
         }
 
-        /*
-         * DO not expose this. This is insecure.
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<MediaContainer>>> GetGalleries()
-        {
-            return await _dbContext.MediaContainers.ToListAsync();
-        }*/
-
         /// <summary>
         /// Return all galleries for the supplied UserId
         /// </summary>
@@ -40,18 +32,6 @@ namespace GalleriesServer.Controllers
         [HttpGet("{userId}")]
         public async Task<ActionResult<IEnumerable<MediaContainer>>> GetGalleries(string userId)
         {
-            /*
-            var owner = _dbContext.Owner.Where(a => a.ExternalUserId == userId) as Owner;
-            if (owner == null)
-            {
-                return NotFound();
-            }
-            if (_dbContext.MediaContainers.Where(a => a.Owner.ID == owner.ID).ToList().Count() == 0)
-            {
-                return NotFound();
-            }
-
-            //var gallery = await _dbContext.MediaContainers.Where(a => a.Owner.ID == owner.ID).ToListAsync(); */
             var gallery = await _dbContext.MediaContainers.Where(a => a.Owner.ExternalUserId == userId).ToListAsync();
             if (gallery == null)
             {
@@ -91,21 +71,9 @@ namespace GalleriesServer.Controllers
         public async Task<ActionResult<MediaContainer>> PostGallery(Gallery galleryItem)
         {
             var owner = await _ownerService.GetOwner(galleryItem.UserId);
-            //get rid of next code is a security risk, we need to inject an additional registration page on signup to collect the owner
-            // details. But for now just create an owner record if one does not exist.
             if (owner == null)
             {
-                _ownerService.AddOwner("", "Auth0", galleryItem.UserId, "", "");
-                /*RedirectToAction("PostOwner", "OwnerController", new Owner()
-                {
-                    EmailAddress = "Unknown",
-                    ExternalIdentityProvider = "Auth0",
-                    ExternalUserId = galleryItem.UserId,
-                    FirstName = "Unknown",
-                    LastName = "Unknown"
-                });*/
-                  
-                owner = await _ownerService.GetOwner(galleryItem.UserId);
+                return BadRequest();
             }
 
             _dbContext.MediaContainers.Add(new MediaContainer() {

@@ -1,6 +1,7 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using System;
+using System.Collections.Generic;
 
 namespace GalleriesServer.Data.Migrations
 {
@@ -14,11 +15,11 @@ namespace GalleriesServer.Data.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    FirstName = table.Column<string>(maxLength: 256, nullable: true),
-                    LastName = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailAddress = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailAddress = table.Column<string>(maxLength: 256, nullable: false),
+                    ExternalIdentityProvider = table.Column<string>(maxLength: 10, nullable: false),
                     ExternalUserId = table.Column<string>(maxLength: 256, nullable: false),
-                    ExternalIdentityProvider = table.Column<string>(maxLength: 10, nullable: false)
+                    FirstName = table.Column<string>(maxLength: 256, nullable: false),
+                    LastName = table.Column<string>(maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,9 +32,9 @@ namespace GalleriesServer.Data.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 256, nullable: false),
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(maxLength: 2048, nullable: true),
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
                     OwnerID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -53,9 +54,9 @@ namespace GalleriesServer.Data.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Comment = table.Column<string>(maxLength: 2048, nullable: true),
                     FileName = table.Column<string>(maxLength: 256, nullable: false),
                     ImageUri = table.Column<string>(maxLength: 256, nullable: false),
-                    Comment = table.Column<string>(maxLength: 2048, nullable: true),
                     MediaContainerID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -80,9 +81,16 @@ namespace GalleriesServer.Data.Migrations
                 column: "MediaContainerID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Owners_EmailAddress",
+                table: "Owners",
+                column: "EmailAddress",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Owners_ExternalUserId",
                 table: "Owners",
-                column: "ExternalUserId");
+                column: "ExternalUserId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

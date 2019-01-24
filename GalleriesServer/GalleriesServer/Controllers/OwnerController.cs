@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GalleriesServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/account")]
     [ApiController]
     public class OwnerController : Controller
     {
@@ -25,6 +25,7 @@ namespace GalleriesServer.Controllers
 
         }
 
+        
         /// <summary>
         /// Returns the owner specified by given UserId.
         /// </summary>
@@ -36,21 +37,7 @@ namespace GalleriesServer.Controllers
         {
             return await _ownerService.GetOwner(userId);
         }
-
-        /// <summary>
-        /// Creates a new instance of owner.
-        /// </summary>
-        /// <param name="owner"></param>
-        /// <returns></returns>
-        // POST: api/Owner
-        [HttpPost]
-        public async Task<ActionResult<Owner>> PostOwner(Owner owner)
-        {
-            //_dbContext.Owners.Add(owner);
-            //await _dbContext.SaveChangesAsync();
-            await _ownerService.AddOwner(owner);
-            return CreatedAtAction("GetOwner", new { userId = owner.ExternalUserId }, owner);
-        }
+        
 
         /// <summary>
         /// Updates the owner record to new supplied values for specified owner id.
