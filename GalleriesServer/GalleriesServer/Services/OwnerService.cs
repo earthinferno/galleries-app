@@ -38,8 +38,6 @@ namespace GalleriesServer.Services
                 return null;
             }
 
-            //Just in case of duplicates
-            //TODO: in case of duplicates is a problem: THERE MUST NOT BE DUPLICATES!
             return owner.First();
         }
 
@@ -59,6 +57,31 @@ namespace GalleriesServer.Services
             _dbContext.Owners.Add(owner);
             await _dbContext.SaveChangesAsync();
         }
+
+        internal async Task UpdateOwner(Owner owner)
+        {
+            var dbOwner = await _dbContext.Owners.FindAsync(owner.ID);
+            if (dbOwner == null)
+            {
+                throw new RepositoryException(RepositiryExceptionType.UserNotFound, owner.ID);
+            }
+            _dbContext.Entry(dbOwner).CurrentValues.SetValues(owner);
+            await _dbContext.SaveChangesAsync();
+        }
+
+
+        internal async Task DeleteOwner(int ownerId)
+        {
+            //var gallery = await _dbContext.MediaContainers.FindAsync(userId);
+            var owner = await _dbContext.Owners.FindAsync(ownerId);
+            if (owner == null)
+            {
+                throw new RepositoryException(RepositiryExceptionType.UserNotFound, owner.ID);
+            }
+            _dbContext.Owners.Remove(owner);
+            await _dbContext.SaveChangesAsync();
+        }
+
 
         // Not used but may be useful
         internal async Task<Owner> GetOwnerOrNewIfNotExists(string userId)

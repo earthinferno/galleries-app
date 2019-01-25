@@ -278,6 +278,106 @@ namespace GalleriesXUnitTest
             }
         }
 
+        [Fact]
+        public async Task tst_DeleteItemMetadata_Return409()
+        {
+            // ARRANGE
+            _optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
+            string filename = "testfilename",
+                filecomment = "testfilecomment";
+            var item = new MediaItem { ID = 1, FileName = filename, Comment = filecomment };
+
+
+            // ACT
+            ActionResult response;
+            using (var dbContext = new GalleriesDbContext(_optionsBuilder.Options))
+            {
+                var controller = Setup(dbContext);
+                response = await controller.DeleteMedia(item.ID);
+            }
+
+            // ASSERT
+            Assert.IsType<ConflictObjectResult>(response);
+
+        }
+
+
+        [Fact]
+        public async Task tst_DeleteItemMetadataOk_Return204()
+        {
+
+            // ARRANGE
+            _optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
+
+            // Variables
+            string name = "testGallery1",
+                description = "Test description 1",
+                externalUserId = "testUser",
+                firstName = "testFirstName",
+                lastName = "testLastName",
+                externalIdentityProvider = "testprovider",
+                emailAddress = "testuser@test.com",
+                filename = "testfilename",
+                filecomment = "testfilecomment";
+            var createdDate = DateTime.Now;
+
+            //setup data
+            using (var dbContext = new GalleriesDbContext(_optionsBuilder.Options))
+            {
+
+
+                var owner = new Owner()
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    EmailAddress = emailAddress,
+                    ExternalIdentityProvider = externalIdentityProvider,
+                    ExternalUserId = externalUserId
+                };
+
+                var mediaItems = new List<MediaItem>
+            {
+                new MediaItem {FileName = filename, Comment = filecomment}
+            };
+
+                var mediaContainer = new MediaContainer()
+                {
+                    Name = name,
+                    CreatedDate = createdDate,
+                    Description = description,
+                    Owner = owner,
+                    MediaItems = mediaItems
+                };
+
+
+                // setup owner in database
+                dbContext.Owners.Add(owner);
+                // setup gallery in the database
+                dbContext.MediaContainers.Add(mediaContainer);
+                await dbContext.SaveChangesAsync();
+            }
+
+
+            // ACT
+            ActionResult response;
+            MediaItem item;
+            using (var dbContext = new GalleriesDbContext(_optionsBuilder.Options))
+            {
+                var controller = Setup(dbContext);
+
+                item = await dbContext.MediaItems.FirstAsync();
+
+                response = await controller.DeleteMedia(item.ID);
+            }
+
+            // ASSERT
+            using (var dbContext = new GalleriesDbContext(_optionsBuilder.Options))
+            {
+                Assert.IsType<NoContentResult>(response);
+                Assert.Null(await dbContext.MediaItems.FindAsync(item.ID));
+            }
+        }
+
         private FormCollection StubFileUpload(string folderName, string comment, string userId)
         {
             var dic = new System.Collections.Generic.Dictionary<string, Microsoft.Extensions.Primitives.StringValues>();

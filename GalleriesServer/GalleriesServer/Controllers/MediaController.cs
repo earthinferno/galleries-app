@@ -149,7 +149,7 @@ namespace GalleriesServer.Controllers
         /// <returns></returns>
         // DELETE: api/media/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<MediaItem>> DeleteMedia(int id)
+        public async Task<ActionResult> DeleteMedia(int id)
         {
             try
             {

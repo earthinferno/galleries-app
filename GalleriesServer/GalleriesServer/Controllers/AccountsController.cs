@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GalleriesServer.Models;
@@ -35,7 +36,12 @@ namespace GalleriesServer.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Owner>> GetAccount(string userId)
         {
-            return await _ownerService.GetOwner(userId);
+            var owner = await _ownerService.GetOwner(userId);
+            if (owner == null)
+            {
+                return NotFound();
+            }
+            return owner;
         }
 
 
@@ -47,15 +53,21 @@ namespace GalleriesServer.Controllers
         /// <returns></returns>
         // PUT: api/Account/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAccount(string userId, Owner owner)
+        public async Task<ActionResult> PutAccount(string userId, Owner owner)
         {
             if (userId != owner.ExternalUserId)
             {
                 return BadRequest();
             }
 
-            _dbContext.Entry(owner).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _ownerService.UpdateOwner(owner);
+            }
+            catch (Exception e)
+            {
+                return Conflict(e);
+            }
             return NoContent();
         }
 
@@ -66,21 +78,17 @@ namespace GalleriesServer.Controllers
         /// <returns></returns>
         // DELETE: api/Account/{id}
         [HttpDelete("{id}")]
-        public async Task<ActionResult<IEnumerable<Owner>>> DeleteAccount(string userId)
+        public async Task<ActionResult> DeleteAccount(int id)
         {
-            //var gallery = await _dbContext.MediaContainers.FindAsync(userId);
-            var owners = await _dbContext.Owners.Where(a => a.ExternalUserId == userId).ToListAsync();
-            if (owners == null || owners.Count() == 0)
+            try
             {
-                return NotFound();
+                await _ownerService.DeleteOwner(id);
             }
-
-            foreach (var owner in owners)
+            catch (Exception e)
             {
-                _dbContext.Owners.Remove(owner);
-                await _dbContext.SaveChangesAsync();
+                return Conflict(e);
             }
-            return owners;
+            return NoContent();
         }
     }
 }

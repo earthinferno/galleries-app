@@ -14,6 +14,8 @@ namespace GalleriesServer.Models
         DuplicateUser,
         [Description("Email address already in use.")]
         DuplicateEmailAddress,
+        [Description("User account not found.")]
+        UserNotFound,
 
         // Gallery
         [Description("Media item not found for ID.")]
