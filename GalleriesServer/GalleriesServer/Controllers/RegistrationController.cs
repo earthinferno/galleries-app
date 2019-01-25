@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GalleriesServer.Extensions;
 using GalleriesServer.Models;
 using GalleriesServer.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +36,19 @@ namespace GalleriesServer.Controllers
         [HttpPost]
         public async Task<ActionResult<Owner>> PostOwner(Owner owner)
         {
-            await _ownerService.AddOwner(owner);
+            try
+            {
+                await _ownerService.AddOwner(owner);
+            }
+            catch (Exception e)
+            {
+                if (e is RepositoryException repositoryException)
+                {
+                    return BadRequest(
+                        repositoryException); 
+                }
+                return BadRequest(e);
+            }
             return CreatedAtAction("GetOwner", new { userId = owner.ExternalUserId }, owner);
         }
 

@@ -21,5 +21,30 @@ namespace GalleriesServer.Services
 
             container.MediaItems.Add(item);
         }
+
+        internal async Task UpdateMediaItem(MediaItem item)
+        {
+            var dbMediaItem = await _dbContext.MediaItems.FindAsync(item.ID);
+            if (dbMediaItem == null)
+            {
+                throw new RepositoryException(RepositiryExceptionType.MediaItemNotFoundForId, item.ID);
+            }
+            _dbContext.Entry(dbMediaItem).CurrentValues.SetValues(item);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        internal async Task DeleteMediaItem(int itemId)
+        {
+            var dbMediaItem = await _dbContext.MediaItems.FindAsync(itemId);
+            if (dbMediaItem == null)
+            {
+                throw new RepositoryException(RepositiryExceptionType.MediaItemNotFoundForId, itemId);
+            }
+
+            _dbContext.Remove(dbMediaItem);
+            await _dbContext.SaveChangesAsync();
+
+        }
+
     }
 }

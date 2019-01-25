@@ -38,19 +38,14 @@ namespace GalleriesServer.Controllers
             _itemService = itemService;
         }
 
-        /// <summary>
-        /// Returns all the media items in a gallery.
-        /// </summary>
-        /// <param name="galleryId"></param>
-        /// <returns></returns>
-        // GET: api/media/userId
+        /*
         [HttpGet("{galleryId}")]
         public async Task<ActionResult<IEnumerable<MediaItem>>> GetItems(int galleryId)
         {
             var gallery = await _dbContext.MediaContainers.FindAsync(galleryId);
             return Ok(gallery.MediaItems as List<MediaItem>);
         }
-
+        */
 
         /// <summary>
         /// Upload a file to the server blob store. Additionally save metadata to the repository.
@@ -128,15 +123,22 @@ namespace GalleriesServer.Controllers
         /// <returns></returns>
             // PUT: api/media/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMedia(int id, MediaItem item)
+        public async Task<ActionResult> PutMedia(int id, MediaItem item)
         {
             if (id != item.ID)
             {
                 return BadRequest();
             }
 
-            _dbContext.Entry(item).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _itemService.UpdateMediaItem(item);
+            }
+            catch (Exception e)
+            {
+                return Conflict(e);
+            }
+
             return NoContent();
         }
 
@@ -149,19 +151,19 @@ namespace GalleriesServer.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<MediaItem>> DeleteMedia(int id)
         {
-            //var gallery = await _dbContext.MediaContainers.FindAsync(userId);
-            var item = await _dbContext.MediaItems.FindAsync(id);
-            if (item == null)
+            try
             {
-                return NotFound();
+                await _itemService.DeleteMediaItem(id);
+            }
+            catch (Exception e)
+            {
+                return Conflict(e);
             }
 
-            _dbContext.Remove(item);
-            await _dbContext.SaveChangesAsync();
 
             //TODO: delete the blob as well. Don't leave it on the server.
 
-            return item;
+            return NoContent();
         }
     }
 }

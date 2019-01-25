@@ -10,44 +10,44 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GalleriesServer.Controllers
 {
-    [Route("api/account")]
+    [Route("api/[contoller]")]
     [ApiController]
-    public class OwnerController : Controller
+    public class AccountsController : Controller
     {
         private readonly GalleriesDbContext _dbContext;
         private readonly OwnerService _ownerService;
 
 
-        public OwnerController(GalleriesDbContext dbContext, OwnerService ownerService)
+        public AccountsController(GalleriesDbContext dbContext, OwnerService ownerService)
         {
             _dbContext = dbContext;
             _ownerService = ownerService;
 
         }
 
-        
+
         /// <summary>
-        /// Returns the owner specified by given UserId.
+        /// Returns the account specified by given UserId.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        // GET: api/Owner/userId
-        [HttpGet("{userId}")]
-        public async Task<ActionResult<Owner>> GetOwner(string userId)
+        // GET: api/Account/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Owner>> GetAccount(string userId)
         {
             return await _ownerService.GetOwner(userId);
         }
-        
+
 
         /// <summary>
-        /// Updates the owner record to new supplied values for specified owner id.
+        /// Updates the account record to new supplied values for specified owner id.
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="owner"></param>
         /// <returns></returns>
-        // PUT: api/Owner/5
-        [HttpPut("{userId}")]
-        public async Task<IActionResult> PutOwner(string userId, Owner owner)
+        // PUT: api/Account/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutAccount(string userId, Owner owner)
         {
             if (userId != owner.ExternalUserId)
             {
@@ -59,9 +59,14 @@ namespace GalleriesServer.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Owner/5
-        [HttpDelete("{userId}")]
-        public async Task<ActionResult<IEnumerable<Owner>>> DeleteOwner(string userId)
+        /// <summary>
+        /// Deletes the account.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        // DELETE: api/Account/{id}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<IEnumerable<Owner>>> DeleteAccount(string userId)
         {
             //var gallery = await _dbContext.MediaContainers.FindAsync(userId);
             var owners = await _dbContext.Owners.Where(a => a.ExternalUserId == userId).ToListAsync();

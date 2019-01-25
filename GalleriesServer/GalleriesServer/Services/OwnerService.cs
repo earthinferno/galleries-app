@@ -45,6 +45,17 @@ namespace GalleriesServer.Services
 
         internal async Task AddOwner(Owner owner)
         {
+
+            //var result = _dbContext.Owners.Where(a => a.ExternalUserId == owner.ExternalUserId || a.EmailAddress == owner.EmailAddress).Count()
+
+            if (_dbContext.Owners.Where(a => a.ExternalUserId == owner.ExternalUserId).Count() > 0)
+            {
+                throw new RepositoryException(RepositiryExceptionType.DuplicateUser, owner.ExternalUserId);
+            }
+            if (_dbContext.Owners.Where(a => a.EmailAddress == owner.EmailAddress).Count() > 0)
+            {
+                throw new RepositoryException(RepositiryExceptionType.DuplicateEmailAddress, owner.EmailAddress);
+            }
             _dbContext.Owners.Add(owner);
             await _dbContext.SaveChangesAsync();
         }

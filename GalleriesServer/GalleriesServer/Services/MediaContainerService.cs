@@ -33,7 +33,13 @@ namespace GalleriesServer.Services
             await _dbContext.SaveChangesAsync();
         }
 
-
+        internal async Task UpdateMediaContainer(MediaContainer mediaContainer)
+        {
+            //_dbContext.Entry(mediaContainer).State = EntityState.Modified;
+            var currentMediaContainer = await _dbContext.MediaContainers.FindAsync(mediaContainer.ID);
+            _dbContext.Entry(currentMediaContainer).CurrentValues.SetValues(mediaContainer);
+            await _dbContext.SaveChangesAsync();
+        }
         // Not used but may be useful
         #region unused
         internal async Task<MediaContainer> GetContainerOrNewIfNotExists(Owner owner, string userFolder)

@@ -17,11 +17,13 @@ namespace GalleriesServer.Controllers
     {
         private readonly GalleriesDbContext _dbContext;
         private readonly OwnerService _ownerService;
+        private readonly MediaContainerService _containerService;
 
-        public GalleriesController(GalleriesDbContext galleriesDbContext, OwnerService ownerService)
+        public GalleriesController(GalleriesDbContext galleriesDbContext, OwnerService ownerService, MediaContainerService containerService)
         {
             _dbContext = galleriesDbContext;
             _ownerService = ownerService;
+            _containerService = containerService;
         }
 
         /// <summary>
@@ -38,29 +40,10 @@ namespace GalleriesServer.Controllers
                 return NotFound();
             }
 
+            // response code 200
             return gallery;
         }
 
-/*
-        /// <summary>
-        /// Get a gallery specific to the provided ID.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        // GET: api/Galleries/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<MediaContainer>> GetGallery(long id)
-        {
-            var gallery = await _dbContext.MediaContainers.FindAsync(id);
-
-            if (gallery == null)
-            {
-                return NotFound();
-            }
-            return gallery;
-            //return Ok(new { gallery });
-        }
-*/
         /// <summary>
         /// Create a new gallery.
         /// </summary>
@@ -95,15 +78,21 @@ namespace GalleriesServer.Controllers
         /// <returns></returns>
         // PUT: api/Galleries/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGallery(int id, MediaContainer gallery)
+        public async Task<ActionResult> PutGallery(int id, MediaContainer gallery)
         {
             if (id != gallery.ID)
             {
-                return BadRequest();
+                //return NotFound(id);
+                BadRequest();
             }
-
-            _dbContext.Entry(gallery).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _containerService.UpdateMediaContainer(gallery);
+            }
+            catch (Exception e)
+            {
+                return Conflict(e);
+            }
             return NoContent();
         }
 
@@ -114,7 +103,7 @@ namespace GalleriesServer.Controllers
         /// <returns></returns>
         // DELETE: api/Galleries/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<MediaContainer>> DeleteGallery(int id)
+        public async Task<ActionResult> DeleteGallery(int id)
         {
             var gallery = await _dbContext.MediaContainers.FindAsync(id);
             if (gallery == null)
@@ -124,7 +113,7 @@ namespace GalleriesServer.Controllers
 
             _dbContext.MediaContainers.Remove(gallery);
             await _dbContext.SaveChangesAsync();
-            return gallery;
+            return NoContent();
         }
     }
 }

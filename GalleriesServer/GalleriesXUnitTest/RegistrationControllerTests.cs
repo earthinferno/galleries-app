@@ -15,101 +15,159 @@ namespace GalleriesXUnitTest
 {
     public class RegistrationControllerTests
     {
-        //GalleriesDbContext _dbContextStub;
-        //RegistrationController _controller;
         DbContextOptionsBuilder<GalleriesDbContext> _optionsBuilder;
 
         public RegistrationControllerTests()
         {
             _optionsBuilder = new DbContextOptionsBuilder<GalleriesDbContext>();
-            /*
-            // Construct the media controller object
-            var optionsBuilder = new DbContextOptionsBuilder<GalleriesDbContext>();
-            optionsBuilder.UseInMemoryDatabase("testdbregistration");
-
-            _dbContextStub = new GalleriesDbContext(optionsBuilder.Options);
-
-            _controller = new RegistrationController(
-                _dbContextStub,
-                new OwnerService(_dbContextStub as GalleriesDbContext));
-                */
         }
 
-        private (GalleriesDbContext, RegistrationController) Setup(string dbName)
+        private RegistrationController Setup(GalleriesDbContext dbContext)
         {
-            _optionsBuilder.UseInMemoryDatabase(dbName);
-            var dbContextStub = new GalleriesDbContext(_optionsBuilder.Options);
             return (
-                dbContextStub,
                 new RegistrationController(
-                dbContextStub,
-                new OwnerService(dbContextStub as GalleriesDbContext))
+                    dbContext,
+                    new OwnerService(dbContext as GalleriesDbContext))
                 );
         }
 
         [Fact]
         public async Task Tst_RegisterDetails_Ok()
         {
-            // ACT
-            var (dbContextStub, controller) = Setup("testdbregister1");
-
-            var response = await controller.PostOwner(
-                new Owner() {
-                    FirstName = "testFirstName",
-                    LastName = "testLastName",
-                    EmailAddress = "testuser@test.com",
-                    ExternalIdentityProvider = "testprovider",
-                    ExternalUserId = "testUser" }
-                );
-
-            // ASSERT
-            Assert.IsType<CreatedAtActionResult>(response.Result);
-            if (response.Result is CreatedAtActionResult result && result.Value is Owner owner)
+            _optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
+            using (var dbContext = new GalleriesDbContext(_optionsBuilder.Options))
             {
-                Assert.Equal("testFirstName", owner.FirstName);
-                Assert.Equal("testLastName", owner.LastName);
-                Assert.Equal("testuser@test.com", owner.EmailAddress);
-                Assert.Equal("testprovider", owner.ExternalIdentityProvider);
-                Assert.Equal("testUser", owner.ExternalUserId);
+                var controller = Setup(dbContext);
+
+                // ACT
+                var response = await controller.PostOwner(
+                    new Owner()
+                    {
+                        FirstName = "testFirstName",
+                        LastName = "testLastName",
+                        EmailAddress = "testuser@test.com",
+                        ExternalIdentityProvider = "testprovider",
+                        ExternalUserId = "testUser"
+                    });
+
+                // ASSERT
+                Assert.IsType<CreatedAtActionResult>(response.Result);
+                if (response.Result is CreatedAtActionResult result && result.Value is Owner owner)
+                {
+                    Assert.Equal("testFirstName", owner.FirstName);
+                    Assert.Equal("testLastName", owner.LastName);
+                    Assert.Equal("testuser@test.com", owner.EmailAddress);
+                    Assert.Equal("testprovider", owner.ExternalIdentityProvider);
+                    Assert.Equal("testUser", owner.ExternalUserId);
+                }
             }
+
         }
 
         [Fact]
-        public async Task Tst_RegisterDuplicateDetails_NotOk()
+        public async Task Tst_RegisterDuplicateEmailAddress_NotOkay()
         {
-
-            // ARRANGE
-            var (dbContextStub, controller) = Setup("testdbregister2");
-
+            // Arrange
             string firstName = "testFirstName",
-                   lastName = "testLastName",
-                   emailAddress = "testuser@test.com",
-                   externalIdentityProvider = "testprovider",
-                   externalUserId = "testUser";
+               lastName = "testLastName",
+               emailAddress = "testuser@test.com",
+               externalIdentityProvider = "testprovider",
+               externalUserId = "testUser";
 
-            dbContextStub.Owners.Add(
-                new Owner() {
-                    FirstName = firstName,
-                    LastName = lastName,
-                    EmailAddress = emailAddress,
-                    ExternalIdentityProvider = externalIdentityProvider,
-                    ExternalUserId = externalUserId });
-            await dbContextStub.SaveChangesAsync();
+            _optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
+            using (var dbContext = new GalleriesDbContext(_optionsBuilder.Options))
+            {
+                dbContext.Owners.Add(
+                    new Owner()
+                    {
+                        FirstName = firstName,
+                        LastName = lastName,
+                        EmailAddress = emailAddress,
+                        ExternalIdentityProvider = externalIdentityProvider,
+                        ExternalUserId = externalUserId
+                    });
+                await dbContext.SaveChangesAsync();
+            }
+
 
             // ACT
-            var response = await controller.PostOwner(
-                new Owner()
-                {
-                    FirstName = firstName + "@@",
-                    LastName = lastName + "@@",
-                    EmailAddress = emailAddress, //unique bit
-                    ExternalIdentityProvider = externalIdentityProvider + "@@",
-                    ExternalUserId = externalUserId + "@@"
-                }
-                );
+            ActionResult<Owner> response;
+            using (var dbContext = new GalleriesDbContext(_optionsBuilder.Options))
+            {
+                var controller = Setup(dbContext);
+
+                response = await controller.PostOwner(
+                    new Owner()
+                    {
+                        FirstName = firstName + "@@",
+                        LastName = lastName + "@@",
+                        EmailAddress = emailAddress, //duplicate item
+                        ExternalIdentityProvider = externalIdentityProvider + "@@",
+                        ExternalUserId = externalUserId + "@@"
+                    });
+            }
 
             // ASSERT
-            Assert.IsType<BadRequestResult>(response.Result);
+            Assert.IsType<BadRequestObjectResult>(response.Result);
+            if (response.Result is BadRequestObjectResult result && result.Value is string message)
+            {
+                Assert.Equal("Email address already in use. Value: " + emailAddress, message);
+            }
+            
         }
+
+        [Fact]
+        public async Task Tst_RegisterDuplicateExternalUserid_NotOk()
+        {
+            // ARRANGE
+            string firstName = "testFirstName",
+               lastName = "testLastName",
+               emailAddress = "testuser@test.com",
+               externalIdentityProvider = "testprovider",
+               externalUserId = "testUser";
+
+            _optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
+
+            using (var dbContext = new GalleriesDbContext(_optionsBuilder.Options))
+            {
+                dbContext.Owners.Add(
+                    new Owner()
+                    {
+                        FirstName = firstName,
+                        LastName = lastName,
+                        EmailAddress = emailAddress,
+                        ExternalIdentityProvider = externalIdentityProvider,
+                        ExternalUserId = externalUserId
+                    });
+                await dbContext.SaveChangesAsync();
+            }
+
+            // ACT
+            ActionResult<Owner> response;
+            using (var dbContext = new GalleriesDbContext(_optionsBuilder.Options))
+            {
+                var controller = Setup(dbContext);
+
+                response = await controller.PostOwner(
+                    new Owner()
+                    {
+                        FirstName = firstName + "@@",
+                        LastName = lastName + "@@",
+                        EmailAddress = emailAddress + "@@",
+                        ExternalIdentityProvider = externalIdentityProvider + "@@",
+                        ExternalUserId = externalUserId //duplicate item
+                    });
+            }
+
+
+            // ASSERT
+            Assert.IsType<BadRequestObjectResult>(response.Result);
+            if (response.Result is BadRequestObjectResult result && result.Value is string message)
+            {
+                Assert.Equal("User account already exists. Value: " + externalUserId, message);
+            }
+
+        }
+
     }
 }
