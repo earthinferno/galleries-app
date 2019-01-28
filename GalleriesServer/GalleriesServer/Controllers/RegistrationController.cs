@@ -38,18 +38,15 @@ namespace GalleriesServer.Controllers
         {
             try
             {
-                await _ownerService.AddOwner(owner);
+                Owner createdOwner = await _ownerService.AddOwner(owner);
+                //return CreatedAtAction(actionName: nameof(AccountsController.GetAccount), controllerName: nameof(AccountsController), routeValues: new { userId = owner.ExternalUserId }, value: createdOwner);
+                return Created("/api/Accounts", createdOwner);
             }
             catch (Exception e)
             {
-                if (e is RepositoryException repositoryException)
-                {
-                    return BadRequest(
-                        repositoryException); 
-                }
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
-            return CreatedAtAction("GetOwner", new { userId = owner.ExternalUserId }, owner);
+
         }
 
     }

@@ -60,7 +60,7 @@ namespace GalleriesServer
             }
 
             app.UseCors(builder =>
-                builder.WithOrigins("http://localhost:8080"));
+                builder.WithOrigins("http://localhost:8080").AllowAnyMethod().AllowAnyHeader());
             app.UseCors(builder =>
                 builder.WithOrigins("https://galleries247b.azurewebsites.net"));
 

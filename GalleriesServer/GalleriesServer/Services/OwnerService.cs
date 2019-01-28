@@ -25,9 +25,8 @@ namespace GalleriesServer.Services
                 FirstName = firstName,
                 LastName = lastName
             };
-            _dbContext.Owners.Add(owner);
+            var createdOwner = _dbContext.Owners.Add(owner);
             _dbContext.SaveChanges();
-
         }
 
         internal async Task<Owner> GetOwner(string userId)
@@ -41,7 +40,7 @@ namespace GalleriesServer.Services
             return owner.First();
         }
 
-        internal async Task AddOwner(Owner owner)
+        internal async Task<Owner> AddOwner(Owner owner)
         {
 
             //var result = _dbContext.Owners.Where(a => a.ExternalUserId == owner.ExternalUserId || a.EmailAddress == owner.EmailAddress).Count()
@@ -54,8 +53,9 @@ namespace GalleriesServer.Services
             {
                 throw new RepositoryException(RepositiryExceptionType.DuplicateEmailAddress, owner.EmailAddress);
             }
-            _dbContext.Owners.Add(owner);
+            var createrOwner = _dbContext.Owners.Add(owner);
             await _dbContext.SaveChangesAsync();
+            return createrOwner.Entity;
         }
 
         internal async Task UpdateOwner(Owner owner)
@@ -76,7 +76,7 @@ namespace GalleriesServer.Services
             var owner = await _dbContext.Owners.FindAsync(ownerId);
             if (owner == null)
             {
-                throw new RepositoryException(RepositiryExceptionType.UserNotFound, owner.ID);
+                throw new RepositoryException(RepositiryExceptionType.UserNotFound, ownerId);
             }
             _dbContext.Owners.Remove(owner);
             await _dbContext.SaveChangesAsync();

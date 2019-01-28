@@ -15,8 +15,7 @@ namespace GalleriesServer.Models
         [MaxLength(2048)]
         public string Description { get; set; }
         public virtual ICollection<MediaItem> MediaItems { get; set; }
+       
         public virtual Owner Owner { get; set; }
-        
-
-}
+    }
 }

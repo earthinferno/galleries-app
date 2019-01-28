@@ -34,12 +34,13 @@ namespace GalleriesServer.Controllers
         [HttpGet("{userId}")]
         public async Task<ActionResult<IEnumerable<MediaContainer>>> GetGalleries(string userId)
         {
-            var gallery = await _dbContext.MediaContainers.Where(a => a.Owner.ExternalUserId == userId).ToListAsync();
-            if (gallery == null)
+            var owner = await _ownerService.GetOwner(userId);
+            if (owner == null)
             {
                 return NotFound();
             }
 
+            var gallery = await _dbContext.MediaContainers.Where(a => a.Owner.ExternalUserId == userId).ToListAsync();
             // response code 200
             return gallery;
         }
@@ -59,15 +60,15 @@ namespace GalleriesServer.Controllers
                 return BadRequest();
             }
 
-            _dbContext.MediaContainers.Add(new MediaContainer() {
+            var createdGallery = _dbContext.MediaContainers.Add(new MediaContainer() {
                 CreatedDate = galleryItem.CreatedDate,
                 Name = galleryItem.Name,
                 Description = galleryItem.Description,
                 Owner = owner
-            });
+            }).Entity;
             await _dbContext.SaveChangesAsync();
 
-            return CreatedAtAction("GetGalleries", new { userId = galleryItem.UserId }, galleryItem);
+            return CreatedAtAction("GetGalleries", new { userId = galleryItem.UserId }, createdGallery);
         }
 
         /// <summary>

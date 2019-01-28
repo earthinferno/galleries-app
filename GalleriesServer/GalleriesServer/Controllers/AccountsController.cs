@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GalleriesServer.Controllers
 {
-    [Route("api/[contoller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AccountsController : Controller
     {
@@ -33,7 +33,7 @@ namespace GalleriesServer.Controllers
         /// <param name="userId"></param>
         /// <returns></returns>
         // GET: api/Account/id
-        [HttpGet("{id}")]
+        [HttpGet("{userId}")]
         public async Task<ActionResult<Owner>> GetAccount(string userId)
         {
             var owner = await _ownerService.GetOwner(userId);
@@ -86,7 +86,7 @@ namespace GalleriesServer.Controllers
             }
             catch (Exception e)
             {
-                return Conflict(e);
+                return Conflict(e.Message);
             }
             return NoContent();
         }

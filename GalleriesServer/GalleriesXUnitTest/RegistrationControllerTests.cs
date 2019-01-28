@@ -51,8 +51,8 @@ namespace GalleriesXUnitTest
                     });
 
                 // ASSERT
-                Assert.IsType<CreatedAtActionResult>(response.Result);
-                if (response.Result is CreatedAtActionResult result && result.Value is Owner owner)
+                Assert.IsType<CreatedResult>(response.Result);
+                if (response.Result is CreatedResult result && result.Value is Owner owner)
                 {
                     Assert.Equal("testFirstName", owner.FirstName);
                     Assert.Equal("testLastName", owner.LastName);
