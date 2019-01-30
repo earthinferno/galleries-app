@@ -58,10 +58,10 @@ namespace GalleriesServer.Controllers
                 return Ok(new List<BlobItem>());
             }
 
-            var filterList = mediaItems.Select(a => a.ImageUri).ToList();
+            //var filterList = mediaItems.Select(a => a.ImageUri).ToList();
             var blobItems = _imageStore.GetImages(
                 containerName,
-                filterList);
+                mediaItems);
 
             //var gallery = await _dbContext.MediaContainers.FindAsync(galleryId);
             return Ok(blobItems);
@@ -80,7 +80,7 @@ namespace GalleriesServer.Controllers
             var comment = form["Comment"];
             var userId = form["UserId"];
 
-            var filepath = "";
+            //var filepath = "";
             var blobName = "";
 
             if (string.IsNullOrEmpty(userFolder) || string.IsNullOrEmpty(userId))
@@ -116,11 +116,16 @@ namespace GalleriesServer.Controllers
                     if (file.Length > 0)
                     {
                         // Save the file as a blob
-                        filepath = Path.GetTempPath() + file.FileName;
-                        using (var stream = new FileStream(filepath, FileMode.Create))
+                        using (var stream = file.OpenReadStream())
                         {
                             blobName = await _imageStore.SaveImage(stream, containerName);
+
                         }
+                        //filepath = Path.GetTempPath() + file.FileName;
+                        //using (var stream = new FileStream(filepath, FileMode.Create))
+                        //{
+                        //    blobName = await _imageStore.SaveImage(stream, containerName);
+                        //}
 
                         // Create the metadata about the added media item.
                         _itemService.AddMediaItem(mediaContainer, new MediaItem() { Comment = comment, FileName = file.FileName, ImageUri = blobName });
@@ -170,10 +175,13 @@ namespace GalleriesServer.Controllers
         /// <returns></returns>
         // DELETE: api/media/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteMedia(int id)
+        public async Task<ActionResult> DeleteMedia(string userid, int id)
         {
             try
             {
+                var mediaItem =  await _dbContext.MediaItems.FindAsync(id);
+                var owner = _dbContext.Owners.Where(a => a.ExternalUserId == userid).Single();
+                _imageStore.DeleteImage(GetContainerName(owner), mediaItem.ImageUri);
                 await _itemService.DeleteMediaItem(id);
             }
             catch (Exception e)

@@ -3,7 +3,7 @@
 
 export default class Auth {
   constructor(uri) {
-    this.uri = uri + "/callback";
+    this.uri = uri + "/authorise";
     this.getProfile = this.getProfile.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
@@ -25,7 +25,7 @@ export default class Auth {
 
   signIn(history) {
     
-    history.replace('/callback');
+    history.replace('/authorise');
   }
 
   handleAuthentication() {

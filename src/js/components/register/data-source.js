@@ -1,15 +1,10 @@
   import {baseapiurl} from '../../globals';
   
-  class GalleryDataService {
-    static getGalleriesData(userId, callback){
-      $.get(baseapiurl + "/api/galleries/" + userId, function(data, status){
-        callback(data);
-      });      
-    }
+  class RegisterDataService {
 
-    static addGallery(data, callback){
+    static registerUser(userId, data, callback){
       $.ajax({
-        url: baseapiurl + '/api/galleries',
+        url: baseapiurl + '/api/register',
         dataType: 'json',
         method: 'Post',
         contentType: 'application/json',
@@ -24,4 +19,4 @@
   
 }
 
-  export { GalleryDataService }
+  export { RegisterDataService }

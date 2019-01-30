@@ -30,7 +30,7 @@ export default class AddImage extends React.Component{
 
 
     ImageDataService.addImage(mediaFiles, data => 
-      this.props.onImagesChange(data));
+      this.props.onImagesChange());
   }
 
   handleInputChange()

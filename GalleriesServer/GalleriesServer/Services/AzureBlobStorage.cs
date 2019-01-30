@@ -34,6 +34,7 @@ namespace GalleriesServer.Services
             return container.GetBlockBlobReference(blobName);
         }
 
+
         private async Task<List<AzureBlobItem>> GetBlobListAsync(string containerName, bool useFlat = true)
         {
             var container = await GetContainerAsync(containerName);
@@ -76,16 +77,6 @@ namespace GalleriesServer.Services
             var blob = await GetBlockBlobAsync(containerName, itemName);
             await blob.UploadFromStreamAsync(stream);
         }
-
-        /* public async Task<List<string>> ListFolderAsync(string containerName)
-        {
-            var list = await GetBlobListAsync(containerName);
-            return list.Where(i => !string.IsNullOrEmpty(i.Container))
-                .Select(i => i.Container)
-                .Distinct()
-                .OrderBy(i => i)
-                .ToList();
-        }*/
 
 
         public async Task<string> ItemUri(string baseUri, string containerName, string itemName)
@@ -131,7 +122,7 @@ namespace GalleriesServer.Services
                 .ToList();
         }
 
-        public async Task<List<BlobItem>> GetMediaItems(string baseUri, string containerName, List<string> fileFilter)
+        public async Task<List<BlobItem>> GetMediaItems(string baseUri, string containerName, List<MediaItem> mediaItems)
         {
             var list = await GetBlobListAsync(containerName);
             var unfilteredList = list.Where(i => !string.IsNullOrEmpty(i.BlobName) && i.IsBlockBlob)
@@ -139,14 +130,35 @@ namespace GalleriesServer.Services
                 .Distinct()
                 .ToList();
             List<BlobItem> filteredList = new List<BlobItem>();
-            foreach (var blobItem in unfilteredList)
+
+            foreach (var mediaItem in mediaItems)
             {
-                if(fileFilter.Contains(blobItem.BlobName))
+                BlobItem blobItem;
+                try
                 {
+                    blobItem = unfilteredList.Where(a => a.BlobName == mediaItem.ImageUri).Single();
+                }
+                catch
+                {
+                    blobItem = new BlobItem();
+                }
+
+                if (blobItem != null)
+                {
+                    blobItem.Id = mediaItem.ID;
+                    blobItem.Comment = mediaItem.Comment;
                     filteredList.Add(blobItem);
                 }
             }
             return filteredList;
+        }
+
+        public async Task DeleteBlockBlobAsync(string containerName, string blobName)
+        {
+            var container = await GetContainerAsync(containerName);
+            var blob = container.GetBlockBlobReference(blobName);
+            await blob.DeleteAsync();
+
         }
     }
 }

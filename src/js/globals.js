@@ -1,12 +1,8 @@
 // Imports here
 import AuthMock from './components/Auth0/authMock';
 import Auth from './components/Auth0/auth';
-import Callback from './components/Auth0/callback.jsx';
-
-
 
 // Global objects here
-const callback = Callback;
 
 
 // Conditional objects here
@@ -29,6 +25,6 @@ if (process.env.NODE_ENV === 'development') {
 
 // exports
 export { auth0Client} ;
-export { callback, baseuri, baseapiurl} ;
+export { baseuri, baseapiurl} ;
 
 

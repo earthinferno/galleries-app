@@ -15,6 +15,16 @@
 
     }
 
+    static delteImage(blobId, userId, callback){
+      $.ajax({
+        url: baseapiurl + '/api/media/' + blobId + '?userId=' +  userId,
+        type: 'DELETE',
+        success:  function(data, status){
+          callback(data);
+        }
+      });
+    }
+
         
     static addImage(files, callback) {
       $.ajax({

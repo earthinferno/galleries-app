@@ -52,8 +52,14 @@ export default class Images extends React.Component{
     
     
 
-    handleImagesChange(imageData) {
-        this.setState({images: imageData});
+    handleImagesChange() {
+        const data = {
+            galleryId: this.props.galleryData.id,
+            userId: this.props.userId
+        }        
+        ImageDataService.getImageData(data, imageData => 
+          this.setState({images: imageData})
+        );
       }
     
     render(){
@@ -61,7 +67,7 @@ export default class Images extends React.Component{
             <div>
                 <div>
                   {this.state.images.map( image => (
-                    <Image key={image.blobName} uri={image.uri} comment={image.comment} like={image.liked}/>
+                    <Image key={image.blobName} onImagesChange={this.handleImagesChange} imageData={image} userId={this.props.userId}/>
                 ))}
                 </div>
                 <p></p>

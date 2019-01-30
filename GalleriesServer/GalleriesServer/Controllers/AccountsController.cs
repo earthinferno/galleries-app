@@ -37,10 +37,10 @@ namespace GalleriesServer.Controllers
         public async Task<ActionResult<Owner>> GetAccount(string userId)
         {
             var owner = await _ownerService.GetOwner(userId);
-            if (owner == null)
-            {
-                return NotFound();
-            }
+            //if (owner == null)
+            //{
+            //    return NotFound();
+            //}
             return owner;
         }
 
