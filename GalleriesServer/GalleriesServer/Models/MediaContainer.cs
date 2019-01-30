@@ -14,8 +14,8 @@ namespace GalleriesServer.Models
         public DateTime CreatedDate { get; set; }
         [MaxLength(2048)]
         public string Description { get; set; }
-        public virtual ICollection<MediaItem> MediaItems { get; set; }
+        public ICollection<MediaItem> MediaItems { get; set; }
        
-        public virtual Owner Owner { get; set; }
+        public Owner Owner { get; set; }
     }
 }

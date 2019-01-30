@@ -38,14 +38,34 @@ namespace GalleriesServer.Controllers
             _itemService = itemService;
         }
 
-        /*
-        [HttpGet("{galleryId}")]
-        public async Task<ActionResult<IEnumerable<MediaItem>>> GetItems(int galleryId)
+        [HttpGet]
+        //public async Task<ActionResult<List<BlobItem>>> GetItems([FromBody] Gallery galleryItem)
+        public async Task<ActionResult<List<BlobItem>>> GetItems(int galleryID, string userId)
         {
-            var gallery = await _dbContext.MediaContainers.FindAsync(galleryId);
-            return Ok(gallery.MediaItems as List<MediaItem>);
+            // return bad request if the owener does not exist.
+            var owner = await _ownerService.GetOwner(userId /*galleryItem.UserId*/);
+            if (owner == null)
+            {
+                return BadRequest();
+            }
+
+            var mediaItems = await _dbContext.MediaItems.Where(x => x.MediaContainer.ID == galleryID).ToListAsync();
+            var containerName = GetContainerName(owner);
+
+            // return empty list
+            if (mediaItems.Count() == 0)
+            {
+                return Ok(new List<BlobItem>());
+            }
+
+            var filterList = mediaItems.Select(a => a.ImageUri).ToList();
+            var blobItems = _imageStore.GetImages(
+                containerName,
+                filterList);
+
+            //var gallery = await _dbContext.MediaContainers.FindAsync(galleryId);
+            return Ok(blobItems);
         }
-        */
 
         /// <summary>
         /// Upload a file to the server blob store. Additionally save metadata to the repository.
@@ -88,6 +108,7 @@ namespace GalleriesServer.Controllers
                 return BadRequest();
             }
 
+            var containerName = GetContainerName(owner);
             foreach (var file in form.Files)
             {
                 try
@@ -98,7 +119,7 @@ namespace GalleriesServer.Controllers
                         filepath = Path.GetTempPath() + file.FileName;
                         using (var stream = new FileStream(filepath, FileMode.Create))
                         {
-                            blobName = await _imageStore.SaveImage(stream, userFolder);
+                            blobName = await _imageStore.SaveImage(stream, containerName);
                         }
 
                         // Create the metadata about the added media item.
@@ -107,7 +128,7 @@ namespace GalleriesServer.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e);
+                    return BadRequest(e.Message);
                 }
             }
 
@@ -164,6 +185,15 @@ namespace GalleriesServer.Controllers
             //TODO: delete the blob as well. Don't leave it on the server.
 
             return NoContent();
+        }
+
+        private string GetContainerName(Owner owner)
+        {
+            if (owner == null || owner.ID == 0)
+            {
+                return "error";
+            }
+            return "user" + owner.ID.ToString();
         }
     }
 }

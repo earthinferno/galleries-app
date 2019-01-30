@@ -8,7 +8,7 @@ export default class GalleryHome extends React.Component {
     {
         super(props);
         this.state = {
-            UserId: this.props.UserId,
+            userId: this.props.userId,
             galleries: []
         }
 
@@ -17,13 +17,13 @@ export default class GalleryHome extends React.Component {
     }
 
     componentDidMount() {
-        GalleryDataService.getGalleriesData(this.state.UserId, galleryData => 
+        GalleryDataService.getGalleriesData(this.state.userId, galleryData => 
             this.setState({galleries: galleryData})
         );
         }
         
     refreshGalleryData(data) {
-        GalleryDataService.getGalleriesData(this.props.UserId, galleryData => 
+        GalleryDataService.getGalleriesData(this.props.userId, galleryData => 
             this.setState({galleries: galleryData})
         );
     }
@@ -31,8 +31,8 @@ export default class GalleryHome extends React.Component {
     render(){
         return (
             <div>
-                <GalleryList galleries={this.state.galleries} />
-                <AddGallery onAddGallery={this.refreshGalleryData} UserId={this.props.UserId}/>
+                <GalleryList galleries={this.state.galleries} userId={this.props.userId}/>
+                <AddGallery onAddGallery={this.refreshGalleryData} userId={this.props.userId}/>
             </div>
             
             

@@ -1,5 +1,6 @@
 ﻿using GalleriesServer.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GalleriesServer.Services
@@ -45,6 +46,21 @@ namespace GalleriesServer.Services
             await _dbContext.SaveChangesAsync();
 
         }
+
+
+        //internal async Task<List<MediaItem>> GetMediaItemsForContainer(int containerId)
+        //{
+        //    var dbMediaItem = await _dbContext.MediaItems.Where(a => a.);
+        //    if (dbMediaItem == null)
+        //    {
+        //        throw new RepositoryException(RepositiryExceptionType.MediaItemNotFoundForId, itemId);
+        //    }
+
+        //    _dbContext.Remove(dbMediaItem);
+        //    await _dbContext.SaveChangesAsync();
+
+        //}
+
 
     }
 }

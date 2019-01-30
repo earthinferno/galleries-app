@@ -1,14 +1,22 @@
 import React from  'react';
-import { ImageDataService } from '../data-source'
+import { ImageDataService } from './data-source'
 
 export default class AddImage extends React.Component{
   constructor(props)
   {
     super(props);
+
+    this.state = {
+      Comment: '',
+  };
+  
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fileInput = React.createRef();
     this.form = React.createRef;
   }
+
+
 
   handleSubmit(event)
   {
@@ -16,20 +24,26 @@ export default class AddImage extends React.Component{
 
     var mediaFiles = new FormData(this.form);
     mediaFiles.append('File',this.fileInput.current.files[0]);
-    mediaFiles.append('Comment','This is my comment');
+    mediaFiles.append('Comment',this.state.Comment);
+    mediaFiles.append('UserFolder',this.props.galleryName);
+    mediaFiles.append('UserId',this.props.userId);
 
-    //var mediaFiles = new FormData(this.form);
 
-
-    var metadata = {
-      comment: 'this is a comment'
-    }    
-    
-    // ImageDataService.addImage(files, data => 
-    // this.setState({images: data}));
-    ImageDataService.addImage(mediaFiles, metadata, data => 
+    ImageDataService.addImage(mediaFiles, data => 
       this.props.onImagesChange(data));
   }
+
+  handleInputChange()
+  {
+      const target = event.target;
+      const value = target.value;
+      const name = target.name;
+  
+      this.setState({
+        [name]: value
+      });
+  }
+
 
   render(){
     return (
@@ -37,7 +51,8 @@ export default class AddImage extends React.Component{
         <label> Upload file: 
           <input type="file" ref={this.fileInput} />
         </label>
-        <br/>
+        <div>Comment: <input name='Comment' type='text' value={this.state.Comment} onChange={this.handleInputChange} /></div>
+
         <button type="submit">Upload Image</button>      
     </form>
     );

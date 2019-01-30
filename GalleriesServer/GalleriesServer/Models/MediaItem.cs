@@ -13,5 +13,7 @@ namespace GalleriesServer.Models
         public string ImageUri { get; set; }
         [MaxLength(2048)]
         public string Comment { get; set; }
+
+        public MediaContainer MediaContainer { get; set; }
     }
 }

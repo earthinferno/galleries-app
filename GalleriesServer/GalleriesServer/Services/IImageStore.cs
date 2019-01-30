@@ -7,9 +7,10 @@ namespace GalleriesServer.Services
 {
     public interface IImageStore
     {
+        List<BlobItem> GetImages(string container, List<string> fileFilter);
         List<BlobItem> GetImages(string container);
         List<string> GetImageUris(string container);
-        Task<string> SaveImage(Stream imageStream, string userAccount);
+        Task<string> SaveImage(Stream imageStream, string containerName);
         string UriFor(string container, string item);
     }
 }

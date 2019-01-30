@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from './image.jsx';
 import AddImage from './add-image.jsx';
-import { ImageDataService } from '../data-source'
+import { ImageDataService } from '../images-collection/data-source'
 
 export default class Images extends React.Component {
 

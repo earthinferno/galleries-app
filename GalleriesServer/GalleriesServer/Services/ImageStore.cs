@@ -21,10 +21,10 @@ namespace GalleriesServer.Services
             _configuration = configuration;
             _baseUri = _configuration["Azure_Blob_BaseUri"];
         }
-        public async Task<string> SaveImage(Stream imageStream, string userAccount)
+        public async Task<string> SaveImage(Stream imageStream, string containerName)
         {
             var imageId = Guid.NewGuid().ToString();
-            await _imageStorage.UploadAsync(userAccount, imageId, imageStream);
+            await _imageStorage.UploadAsync(containerName, imageId, imageStream);
             return imageId;
         }
 
@@ -41,6 +41,11 @@ namespace GalleriesServer.Services
         public List<BlobItem> GetImages(string container)
         {
             return _imageStorage.GetMediaItems(_baseUri, container).Result;
+        }
+
+        public List<BlobItem> GetImages(string container, List<string> fileFilter)
+        {
+            return _imageStorage.GetMediaItems(_baseUri, container, fileFilter).Result;
         }
 
     }

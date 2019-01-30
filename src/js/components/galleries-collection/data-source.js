@@ -15,6 +15,8 @@
     //   );
     // }    
 
+    
+
     static addGallery(data, callback){
       $.ajax({
         url: baseapiurl + '/api/galleries',
@@ -28,7 +30,7 @@
           callback(data);
         }
       });
-  
+      
     } 
     
 

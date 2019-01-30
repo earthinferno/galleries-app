@@ -11,7 +11,7 @@ using System;
 namespace GalleriesServer.Data.Migrations
 {
     [DbContext(typeof(GalleriesDbContext))]
-    [Migration("20190124092229_initial")]
+    [Migration("20190129163414_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -114,7 +114,7 @@ namespace GalleriesServer.Data.Migrations
 
             modelBuilder.Entity("GalleriesServer.Models.MediaItem", b =>
                 {
-                    b.HasOne("GalleriesServer.Models.MediaContainer")
+                    b.HasOne("GalleriesServer.Models.MediaContainer", "MediaContainer")
                         .WithMany("MediaItems")
                         .HasForeignKey("MediaContainerID");
                 });

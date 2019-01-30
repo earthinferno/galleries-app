@@ -113,7 +113,7 @@ namespace GalleriesServer.Data.Migrations
 
             modelBuilder.Entity("GalleriesServer.Models.MediaItem", b =>
                 {
-                    b.HasOne("GalleriesServer.Models.MediaContainer")
+                    b.HasOne("GalleriesServer.Models.MediaContainer", "MediaContainer")
                         .WithMany("MediaItems")
                         .HasForeignKey("MediaContainerID");
                 });

@@ -34,7 +34,7 @@ export default class AddGallery extends React.Component {
             Name: this.state.NameValue,
             CreatedDate: new Date(),
             Description: this.state.DescriptionValue,
-            UserId: this.props.UserId,
+            userId: this.props.userId,
         }
         GalleryDataService.addGallery(data, galleryData => 
             this.props.onAddGallery(galleryData)

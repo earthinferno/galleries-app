@@ -131,6 +131,22 @@ namespace GalleriesServer.Services
                 .ToList();
         }
 
-
+        public async Task<List<BlobItem>> GetMediaItems(string baseUri, string containerName, List<string> fileFilter)
+        {
+            var list = await GetBlobListAsync(containerName);
+            var unfilteredList = list.Where(i => !string.IsNullOrEmpty(i.BlobName) && i.IsBlockBlob)
+                .Select(i => new BlobItem() { Uri = $"{baseUri}{containerName}/{i.BlobName}{i.BlockBlobSharedAccessSignature}", BlobName = i.BlobName })
+                .Distinct()
+                .ToList();
+            List<BlobItem> filteredList = new List<BlobItem>();
+            foreach (var blobItem in unfilteredList)
+            {
+                if(fileFilter.Contains(blobItem.BlobName))
+                {
+                    filteredList.Add(blobItem);
+                }
+            }
+            return filteredList;
+        }
     }
 }

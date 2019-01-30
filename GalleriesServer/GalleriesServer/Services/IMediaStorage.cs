@@ -11,5 +11,6 @@ namespace GalleriesServer.Services
         Task<string> ItemUri(string baseUri, string containerName, string itemName);
         Task<List<string>> GetAllMediaUris(string baseUri, string containerName);
         Task<List<BlobItem>> GetMediaItems(string baseUri, string containerName);
+        Task<List<BlobItem>> GetMediaItems(string baseUri, string containerName, List<string> fileFilter);
     }
 }

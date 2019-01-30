@@ -397,5 +397,83 @@ namespace GalleriesXUnitTest
 
             return new FormCollection(dic, new FormFileCollection { file });
         }
+
+        [Fact]
+        public async Task tst_GetAllGalleryItems_Return200()
+        {
+
+            // ARRANGE
+            _optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
+
+            // Variables
+            string name = "testGallery1",
+                description = "Test description 1",
+                externalUserId = "testUser",
+                firstName = "testFirstName",
+                lastName = "testLastName",
+                externalIdentityProvider = "testprovider",
+                emailAddress = "testuser@test.com",
+                filename = "testfilename",
+                filecomment = "testfilecomment";
+            var createdDate = DateTime.Now;
+
+            //setup data
+            using (var dbContext = new GalleriesDbContext(_optionsBuilder.Options))
+            {
+
+
+                var owner = new Owner()
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    EmailAddress = emailAddress,
+                    ExternalIdentityProvider = externalIdentityProvider,
+                    ExternalUserId = externalUserId
+                };
+
+                var mediaItems = new List<MediaItem>
+            {
+                new MediaItem {FileName = filename, Comment = filecomment}
+            };
+
+                var mediaContainer = new MediaContainer()
+                {
+                    Name = name,
+                    CreatedDate = createdDate,
+                    Description = description,
+                    Owner = owner,
+                    MediaItems = mediaItems
+                };
+
+
+                // setup owner in database
+                dbContext.Owners.Add(owner);
+                // setup gallery in the database
+                dbContext.MediaContainers.Add(mediaContainer);
+                await dbContext.SaveChangesAsync();
+            }
+
+
+            // ACT
+            ActionResult<List <BlobItem>> response;
+            MediaContainer item;
+            using (var dbContext = new GalleriesDbContext(_optionsBuilder.Options))
+            {
+                var controller = Setup(dbContext);
+
+                item = await dbContext.MediaContainers.FirstAsync();
+
+                response = await controller.GetItems(item.ID, externalUserId);
+            }
+
+            // ASSERT
+            Assert.IsType<OkObjectResult>(response);
+            if (response.Result is OkObjectResult result && result.Value is List<BlobItem> items)
+            {
+                Assert.NotNull(items[0].BlobName);
+            }
+            
+        }
+
     }
 }
