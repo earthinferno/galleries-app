@@ -293,7 +293,7 @@ namespace GalleriesXUnitTest
             using (var dbContext = new GalleriesDbContext(_optionsBuilder.Options))
             {
                 var controller = Setup(dbContext);
-                response = await controller.DeleteMedia(item.ID);
+                response = await controller.DeleteMedia("nouser", item.ID);
             }
 
             // ASSERT
@@ -367,7 +367,7 @@ namespace GalleriesXUnitTest
 
                 item = await dbContext.MediaItems.FirstAsync();
 
-                response = await controller.DeleteMedia(item.ID);
+                response = await controller.DeleteMedia(externalUserId, item.ID);
             }
 
             // ASSERT
