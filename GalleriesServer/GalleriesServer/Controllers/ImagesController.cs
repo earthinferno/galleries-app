@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GalleriesServer.Data;
+using GalleriesServer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,15 +14,15 @@ namespace GalleriesServer.Controllers
     public class ImagesController : Controller
     {
         private int _imageId = 0;
-        private IList<Image> _data;
+        private IList<BlobItem> _data;
         
         public ImagesController()
         {
-            _data = new List<Image>()
+            _data = new List<BlobItem>()
             {
-                new Image{Id = _imageId++, Comment="First Image", Liked = true, Url="./../../src/img/index.png" },
-                new Image{Id = _imageId++, Comment="Second Image", Liked = true, Url="./../../src/img/index.png" },
-                new Image{Id = _imageId++, Comment="tres bonn Image", Liked = true, Url="./../../src/img/index.png" }
+                new BlobItem{Id = _imageId++, Comment="First Image", Liked = true, Uri="./../../src/img/index.png" },
+                new BlobItem{Id = _imageId++, Comment="Second Image", Liked = true, Uri="./../../src/img/index.png" },
+                new BlobItem{Id = _imageId++, Comment="tres bonn Image", Liked = true, Uri="./../../src/img/index.png" }
             };
         }
 
@@ -37,6 +37,8 @@ namespace GalleriesServer.Controllers
         {
 
             var images = _data.Select(x => x).ToList();
+            var comment = form["Comment"];
+
             var filepath = ""; 
             foreach (var file in form.Files)
             {
@@ -47,15 +49,18 @@ namespace GalleriesServer.Controllers
                     {
                         await file.CopyToAsync(stream);
                     }
-                    images.Add(new Image() { Id = _imageId++, Comment = "No Comment yet", Liked = false, Url = filepath + file.Name });
+                    RedirectToAction("PostItem", "Media", new MediaItem { Comment = comment, FileName = file.Name, ImageUri = "Some URI" });
+
+                    //images.Add(new Image() { Id = _imageId++, Comment = comment, Liked = false, Url = filepath + file.Name });
                 }
             }
+            
 
             return Ok(new { results = images });
         }
 
 
-        private string GetImages(IList<Image> images)
+        private string GetImages(IList<BlobItem> images)
         {
             StringBuilder str = new StringBuilder();
             str.Append("[");
@@ -65,10 +70,10 @@ namespace GalleriesServer.Controllers
             return str.ToString();
         }
 
-        private string ImageTemplate(Image image)
+        private string ImageTemplate(BlobItem image)
         {
             return "{id:" + image.Id.ToString() + "," +
-                   "url:" + image.Url + "," +
+                   "url:" + image.Uri + "," +
                    "comment:" + image.Comment + "," +
                    "liked:" + image.Liked.ToString() + "}";
         }
