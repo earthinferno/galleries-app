@@ -36,12 +36,13 @@ export default class App extends React.Component {
     // Navigation is welcome -> callback -> register(optional) -> home
     render() {
         return (
-          <div>
+          <div >
             <Navbar/>
             <Route exact path="/" component={Welcome} />
             <Route exact path='/authorise' render={(props) => <Authorise setUserId={this.setUserId} setIdentity={this.setIndentity} {...props}/>}/>
             <Route exact path="/home" render={(props) => <GalleryHome userId={this.state.userId} {...props} />} />
             <Route exact path="/register" render={(props) => <Register identityProfile={this.state.indentity}  userId={this.state.userId} {...props}/>} />
+            <div className="fixed-bottom">...</div>
           </div>
         );
       }

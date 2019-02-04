@@ -1,0 +1,51 @@
+$body-bg: orange;
+$body-color: #111;
+
+
+.bg { 
+    /* The image used */
+    background-image: url("./../images/welcome-page-main.png");
+  
+    /* Center and scale the image nicely */
+    background-repeat: no-repeat;
+    
+    @include media-breakpoint-up(sm) {
+        /* Full height */
+        height: 100%; 
+        /* Center and scale the image nicely */
+        background-size: contain;
+        /* Center and scale the image nicely */        
+        background-position: center;
+    }
+    background-size: contain;
+    background-position: bottom;
+
+}
+
+.custom_image_size {
+    
+    @include media-breakpoint-up(sm) {
+        height: 100px;
+        width: 100px;
+    }
+    height: 30px;
+    width: 30px;
+
+}
+
+.custom_heading_size_h30 {
+    @include media-breakpoint-up(sm) {
+        font-size: 1rem * 2;
+    }
+}
+
+.custom_heading_size_h40 {
+    @include media-breakpoint-up(sm) {
+        font-size: 1rem * 1.5;
+    }
+}
+
+
+
+
+

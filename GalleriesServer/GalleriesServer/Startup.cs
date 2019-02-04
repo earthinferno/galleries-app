@@ -57,12 +57,15 @@ namespace GalleriesServer
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
+                app.UseCors(builder =>
+                    builder.WithOrigins("http://localhost:8080").AllowAnyMethod().AllowAnyHeader());
 
-//            app.UseCors(builder =>
-//                builder.WithOrigins("http://localhost:8080").AllowAnyMethod().AllowAnyHeader());
-            app.UseCors(builder =>
-                builder.WithOrigins("https://galleries247b.azurewebsites.net").AllowAnyMethod().AllowAnyHeader());
+            }
+            else
+            {
+                app.UseCors(builder =>
+                    builder.WithOrigins("https://galleries247b.azurewebsites.net").AllowAnyMethod().AllowAnyHeader());
+            }
 
             app.UseMvc();
             app.UseDefaultFiles();

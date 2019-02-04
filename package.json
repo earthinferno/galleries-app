@@ -28,13 +28,17 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.9.3",
+    "popper.js": "^1.14.7",
+    "postcss-loader": "^3.0.0",
     "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
     "auth0-js": "^9.8.2",
+    "bootstrap": "^4.2.1",
     "history": "^4.7.2",
     "jquery": "^3.3.1",
     "react": "^16.6.3",
