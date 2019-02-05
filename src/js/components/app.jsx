@@ -5,6 +5,7 @@ import Authorise from './Auth0/authorise.jsx';
 import GalleryHome from './galleries-collection/gallery-home.jsx';
 import Welcome from './welcome-page/welcome.jsx';
 import Register from './register/register.jsx';
+import Images from './images-collection/images-container.jsx';
 
 
 export default class App extends React.Component {
@@ -14,11 +15,13 @@ export default class App extends React.Component {
       // Store information about the user here. Only set on authorisation.
       this.state = {
         userId: '',
-        indentity: {}
+        indentity: {},
+        galleryData: {},
       }
 
       this.setUserId = this.setUserId.bind(this);
       this.setIndentity = this.setIndentity.bind(this);
+      this.setGalleryData = this.setGalleryData.bind(this);
     }
 
     setUserId(userId){
@@ -32,6 +35,10 @@ export default class App extends React.Component {
       }
     }
 
+    setGalleryData(data){
+      this.setState({galleryData: data})
+    }
+
     // The available routes for the main panell are defined below. 
     // Navigation is welcome -> callback -> register(optional) -> home
     render() {
@@ -40,9 +47,10 @@ export default class App extends React.Component {
             <Navbar/>
             <Route exact path="/" component={Welcome} />
             <Route exact path='/authorise' render={(props) => <Authorise setUserId={this.setUserId} setIdentity={this.setIndentity} {...props}/>}/>
-            <Route exact path="/home" render={(props) => <GalleryHome userId={this.state.userId} {...props} />} />
             <Route exact path="/register" render={(props) => <Register identityProfile={this.state.indentity}  userId={this.state.userId} identityProvider='auth0'  {...props}/>} />
-            <div className="fixed-bottom">...</div>
+            <Route exact path="/home" render={(props) => <GalleryHome userId={this.state.userId} setGalleryData={this.setGalleryData} {...props} />} />
+            <Route exact path="/home/gallery" render={(props) => <Images galleryData={this.state.galleryData} userId={this.state.userId} {...props} />} />
+            {/* <div className="fixed-bottom">...</div> */}
           </div>
         );
       }

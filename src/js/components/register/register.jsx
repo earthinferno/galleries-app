@@ -56,23 +56,27 @@ export default class Register extends React.Component {
 
         const form = 
             <form onSubmit={this.handleSubmit}>
+
                 {/* firstrow */}
                 <div className='form-row'>
-                
                     {/* Firstname */}
-                    <div className='form-group'>
+                    <div className='form-group col-md-6'>
                         <label >First Name</label>
                         <input type='text' className='form-control' name='FirstName' value={this.state.FirstName} onChange={this.handleInputChange} placeholder='Your first name'/>        
                     </div>
                     {/* Lastname */}
-                    <div className='form-group'>
+                    <div className='form-group col-md-6'>
                         <label >Last Name</label>
                         <input type='text'  className='form-control' name='LastName' value={this.state.LastName} onChange={this.handleInputChange} placeholder='Your last name'/>        
                     </div>                
-                
-                
                 </div>
                 
+                {/* user name */}
+                <div className='form-group'>
+                    <label >Username </label>
+                    <input type='text' readonly className='form-control' name='UserName' value={this.props.userId} placeholder={this.props.userId}/>        
+                </div>
+
                 {/* Email Address:  */}
                 <div className='form-group'>
                     <label >Email Address </label>
@@ -80,76 +84,18 @@ export default class Register extends React.Component {
                     <small id='emailaddresshelp' className='form-text test-muted'>We'll never share your email with anyone else.*</small>
                 </div>
 
+                {/* button */}
                 <input type="submit" className='btn btn-outline-primary' value="Submit" />
                 
             </form>;
 
-        /*
-        const firstName = 
-                <div className='row justify-content-center'>
-                    <div className='col-sm-3'>
-                        <label >First Name</label>
-                    </div>
-                    <div className='col-sm-3'>
-                        <input type='text' name='FirstName' value={this.state.FirstName} onChange={this.handleInputChange} placeholder='Your first name'/>        
-                    </div>
-                </div>;
-        
-        const lastName = 
-                <div className='row justify-content-center'>
-                    <div className='col-sm-3'>
-                    <label >Last Name</label>
-                    </div>
-                    <div className='col-sm-3'>
-                        <input type='text' name='LastName' value={this.state.LastName} onChange={this.handleInputChange} placeholder='Your last name'/>
-                    </div>
-                </div>;
-
-        const emailAddress = 
-                <div className='row justify-content-center'>
-                    <div className='col-sm-3'>
-                    <label >Email Address </label>
-                    </div>
-                    <div className='col-sm-3'>
-                        <input type='text' name='EmailAddress' value={this.state.EmailAddress} onChange={this.handleInputChange} placeholder='Your email address'/>        
-                        <small id='emailaddresshelp' className='form-text test-muted'>We'll never share your email with anyone else.*</small>
-                    </div>
-                </div>;
-
-        const submit = 
-            <div className='row justify-content-center'>
-                <div className='col-sm-6'>
-                    <input type="submit" className='btn btn-outline-primary' value="Submit" />
-                </div>
-            </div>
-
-        const form = 
-            <form onSubmit={this.handleSubmit}>            
-                {firstName}
-                {lastName}
-                {emailAddress}
-                {submit}
-            </form>
-*/
         return (
-            // <div className='container-flex'>
-            //     <div className='row justify-content-around'>
-            //         <div className='col-8'>
-            //             <div>Welcome: {this.props.userId}</div>
-            //         </div>
-            //     </div>
-            //     {form}
-            //     {/* <div className='row justify-content-around'>
-            //         <div className=''>
-            //             {form}
-            //         </div>
-            //     </div> */}
-            // </div>
-
+            // center the form
             <div className='container-flex'>
                 <div className='row justify-content-around'>
                     <div className='col-8'>
-                        <div>Welcome: {this.props.userId}</div>
+                        {/* welcome message */}
+                        <div>Welcome. Please register your details with us</div>
                     </div>
                 </div> 
                 <div className='row justify-content-around'>

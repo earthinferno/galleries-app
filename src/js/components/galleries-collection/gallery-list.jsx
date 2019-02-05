@@ -5,12 +5,12 @@ export default class GalleryList extends React.Component {
   
     render(){
         return (
-            <div>
-                <ul>
+            <div className='row'>
+                {/* <ul> */}
                 {this.props.galleries.map( gallery => (
-                    <GallerySummary key={gallery.id} data={gallery} userId={this.props.userId} />
+                    <GallerySummary key={gallery.id} data={gallery} userId={this.props.userId} {...this.props} />
                   ))}
-                </ul>
+                {/* </ul> */}
             </div>
         );
     }
