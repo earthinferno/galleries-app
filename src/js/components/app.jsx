@@ -41,7 +41,7 @@ export default class App extends React.Component {
             <Route exact path="/" component={Welcome} />
             <Route exact path='/authorise' render={(props) => <Authorise setUserId={this.setUserId} setIdentity={this.setIndentity} {...props}/>}/>
             <Route exact path="/home" render={(props) => <GalleryHome userId={this.state.userId} {...props} />} />
-            <Route exact path="/register" render={(props) => <Register identityProfile={this.state.indentity}  userId={this.state.userId} {...props}/>} />
+            <Route exact path="/register" render={(props) => <Register identityProfile={this.state.indentity}  userId={this.state.userId} identityProvider='auth0'  {...props}/>} />
             <div className="fixed-bottom">...</div>
           </div>
         );

@@ -1,8 +1,8 @@
 var path = require('path');
-var Extracttextplugin = require('extract-text-webpack-plugin');
-var ExtractPlugin = new Extracttextplugin({
-    filename: 'main.css'
-});
+// var Extracttextplugin = require('extract-text-webpack-plugin');
+// var ExtractPlugin = new Extracttextplugin({
+//     filename: 'main.css'
+// });
 var HtmlWebPackPlugin = require('html-webpack-plugin');
 var CleanWebPackPlugin = require('clean-webpack-plugin');
 var webpack = require('webpack');
@@ -51,21 +51,24 @@ module.exports = {
             {
                 test: /\.(scss)$/,
                 use: [{
-                  loader: 'style-loader', // inject CSS to page
+                  // Adds CSS to the DOM by injecting a `<style>` tag
+                  loader: 'style-loader',
                 }, {
-                  loader: 'css-loader', // translates CSS into CommonJS modules
+                  // Interprets `@import` and `url()` like `import/require()` and will resolve them
+                  loader: 'css-loader', 
                 }, {
-                  loader: 'postcss-loader', // Run post css actions
+                  // Loader for webpack to process CSS with PostCSS
+                  loader: 'postcss-loader', 
                   options: {
-                    plugins: function () { // post css plugins, can be exported to postcss.config.js
+                    plugins: function () { 
                       return [
-                        require('precss'),
                         require('autoprefixer')
                       ];
                     }
                   }
                 }, {
-                  loader: 'sass-loader' // compiles Sass to CSS
+                  // Loads a SASS/SCSS file and compiles it to CSS
+                  loader: 'sass-loader' 
                 }]                
             },
             {
@@ -98,7 +101,7 @@ module.exports = {
         ]
     },
     plugins: [
-        ExtractPlugin,
+        // ExtractPlugin,
         new HtmlWebPackPlugin({
             template: './src/index.html'
         }),
