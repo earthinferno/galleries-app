@@ -1,32 +1,35 @@
-var path = require('path');
-// var Extracttextplugin = require('extract-text-webpack-plugin');
-// var ExtractPlugin = new Extracttextplugin({
-//     filename: 'main.css'
-// });
-var HtmlWebPackPlugin = require('html-webpack-plugin');
-var CleanWebPackPlugin = require('clean-webpack-plugin');
-var webpack = require('webpack');
+const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const CleanWebPackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
-
-//var $ = 
 /*
             {
-                test: /\.scss$/,
-                use: ExtractPlugin.extract({
-                    use: [
-                        'css-loader', 'sass-loader', 'style-loader',  'postcss-loader'{
-                            loader: 'postcss-loader',
-                            options: {
-                                plugins: function () {
-                                    return [ require('autoprefixer')]
-                                }
-                            }
-                        }
-                    ]
-                })
+                test: /\.(scss)$/,
+                use: [{
+                  // Adds CSS to the DOM by injecting a `<style>` tag
+                  loader: 'style-loader',
+                }, {
+                  // Interprets `@import` and `url()` like `import/require()` and will resolve them
+                  loader: 'css-loader', 
+                }, {
+                  // Loader for webpack to process CSS with PostCSS
+                  loader: 'postcss-loader', 
+                  options: {
+                    plugins: function () { 
+                      return [
+                        require('autoprefixer')
+                      ];
+                    }
+                  }
+                }, {
+                  // Loads a SASS/SCSS file and compiles it to CSS
+                  loader: 'sass-loader' 
+                }]                
             },
-*/
 
+*/
 module.exports = {
     entry: ['babel-polyfill','./src/js/index.js'],
     output: {
@@ -54,18 +57,10 @@ module.exports = {
                   // Adds CSS to the DOM by injecting a `<style>` tag
                   loader: 'style-loader',
                 }, {
+                    loader: MiniCssExtractPlugin.loader,
+                }, {
                   // Interprets `@import` and `url()` like `import/require()` and will resolve them
                   loader: 'css-loader', 
-                }, {
-                  // Loader for webpack to process CSS with PostCSS
-                  loader: 'postcss-loader', 
-                  options: {
-                    plugins: function () { 
-                      return [
-                        require('autoprefixer')
-                      ];
-                    }
-                  }
                 }, {
                   // Loads a SASS/SCSS file and compiles it to CSS
                   loader: 'sass-loader' 
@@ -101,7 +96,9 @@ module.exports = {
         ]
     },
     plugins: [
-        // ExtractPlugin,
+        new MiniCssExtractPlugin({
+            filename: "style.css"
+          }),
         new HtmlWebPackPlugin({
             template: './src/index.html'
         }),

@@ -62,12 +62,12 @@ export default class Register extends React.Component {
                     {/* Firstname */}
                     <div className='form-group'>
                         <label >First Name</label>
-                        <input type='text' className='formControl' name='FirstName' value={this.state.FirstName} onChange={this.handleInputChange} placeholder='Your first name'/>        
+                        <input type='text' className='form-control' name='FirstName' value={this.state.FirstName} onChange={this.handleInputChange} placeholder='Your first name'/>        
                     </div>
                     {/* Lastname */}
                     <div className='form-group'>
                         <label >Last Name</label>
-                        <input type='text'  className='formControl' name='LastName' value={this.state.LastName} onChange={this.handleInputChange} placeholder='Your last name'/>        
+                        <input type='text'  className='form-control' name='LastName' value={this.state.LastName} onChange={this.handleInputChange} placeholder='Your last name'/>        
                     </div>                
                 
                 
@@ -76,7 +76,7 @@ export default class Register extends React.Component {
                 {/* Email Address:  */}
                 <div className='form-group'>
                     <label >Email Address </label>
-                    <input type='text'  className='formControl' name='EmailAddress' value={this.state.EmailAddress} onChange={this.handleInputChange} placeholder='Your email address'/>        
+                    <input type='text'  className='form-control' name='EmailAddress' value={this.state.EmailAddress} onChange={this.handleInputChange} placeholder='Your email address'/>        
                     <small id='emailaddresshelp' className='form-text test-muted'>We'll never share your email with anyone else.*</small>
                 </div>
 
@@ -146,9 +146,18 @@ export default class Register extends React.Component {
             //     </div> */}
             // </div>
 
-            <div>{form}</div>
-            
-
+            <div className='container-flex'>
+                <div className='row justify-content-around'>
+                    <div className='col-8'>
+                        <div>Welcome: {this.props.userId}</div>
+                    </div>
+                </div> 
+                <div className='row justify-content-around'>
+                    <div className='col-8'>
+                        {form}
+                    </div>
+                </div>
+            </div>
 
         );
     }
