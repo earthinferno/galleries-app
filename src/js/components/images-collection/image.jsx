@@ -22,16 +22,23 @@ export default class Image extends React.Component{
             this.props.onImagesChange());        
     }
 
-    //<Image key={image.blobName} uri={image.uri} comment={image.comment} like={image.liked} imageData={image}/>
     render(){
+
+        const card = 
+            <div className='col-sm-6'>
+                <div className='card'>
+                    <img src={this.props.imageData.uri} className="card-img-top" alt="..."></img>
+                    <div className='card-body'>
+                        <h5 className='card-title'> Comment </h5>
+                        <p className='card-text'>{this.props.imageData.comment} </p>
+                        <ImageControl context='UPDATE' handledUpdate={this.handledUpdate} handledDelete={this.handledDelete} />  
+                    </div>
+                </div>
+            </div>;
 
         return (
             <div>
-                <img src={this.props.imageData.uri}></img>
-                <div>
-                  <div>Comment: {this.props.imageData.comment}</div>
-                  <ImageControl context='UPDATE' handledUpdate={this.handledUpdate} handledDelete={this.handledDelete} />  
-                </div>
+                {card}
             </div>
         ); 
     }

@@ -12,6 +12,7 @@ export default class Images extends React.Component{
         }
 
         this.handleImagesChange = this.handleImagesChange.bind(this);
+        this.goHome = this.goHome.bind(this);
     }
 
 
@@ -61,11 +62,17 @@ export default class Images extends React.Component{
           this.setState({images: imageData})
         );
       }
+
+    goHome(event) {
+        this.props.history.replace('/home');
+        event.preventDefault();
+    }
     
     render(){
+
         return (
             <div>
-                <div>
+                <div className='row'>
                   {this.state.images.map( image => (
                     <Image key={image.blobName} onImagesChange={this.handleImagesChange} imageData={image} userId={this.props.userId}/>
                 ))}
@@ -73,6 +80,7 @@ export default class Images extends React.Component{
                 <p></p>
 
                 <AddImage onImagesChange={this.handleImagesChange} userId={this.props.userId} galleryName={this.props.galleryData.name}/>
+                <button className='btn btn-outline-primary' onClick={this.goHome}>Galleries</button>
             </div>
         )};
 }

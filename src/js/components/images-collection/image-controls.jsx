@@ -8,13 +8,13 @@ export default class ImageControls extends React.Component{
         const updateContent = 
 
             <div>
-                <button onClick={this.props.handledUpdate}>Update</button>
-                <button onClick={this.props.handledDelete}>Delete</button>
+                <button className='btn btn-outline-primary' onClick={this.props.handledUpdate}>Update</button>
+                <button className='btn btn-outline-primary' onClick={this.props.handledDelete}>Delete</button>
             </div>;
 
         const addContent = 
             <span>
-                <button onClick={this.props.handledAdd}>Add</button>
+                <button className='btn btn-outline-primary' onClick={this.props.handledAdd}>Add</button>
             </span>;
         
         return ( 

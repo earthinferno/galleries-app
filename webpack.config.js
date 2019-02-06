@@ -1,14 +1,8 @@
-var path = require('path');
-var Extracttextplugin = require('extract-text-webpack-plugin');
-var ExtractPlugin = new Extracttextplugin({
-    filename: 'main.css'
-});
-var HtmlWebPackPlugin = require('html-webpack-plugin');
-var CleanWebPackPlugin = require('clean-webpack-plugin');
-var webpack = require('webpack');
-
-
-//var $ = 
+const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const CleanWebPackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
     entry: ['babel-polyfill','./src/js/index.js'],
@@ -32,10 +26,19 @@ module.exports = {
                 ]
             },
             {
-                test: /\.scss$/,
-                use: ExtractPlugin.extract({
-                    use: ['css-loader', 'sass-loader']
-                })
+                test: /\.(scss)$/,
+                use: [{
+                  // Adds CSS to the DOM by injecting a `<style>` tag
+                  loader: 'style-loader',
+                }, {
+                    loader: MiniCssExtractPlugin.loader,
+                }, {
+                  // Interprets `@import` and `url()` like `import/require()` and will resolve them
+                  loader: 'css-loader', 
+                }, {
+                  // Loads a SASS/SCSS file and compiles it to CSS
+                  loader: 'sass-loader' 
+                }]                
             },
             {
                 test: /\.html$/,
@@ -67,7 +70,9 @@ module.exports = {
         ]
     },
     plugins: [
-        ExtractPlugin,
+        new MiniCssExtractPlugin({
+            filename: "style.css"
+          }),
         new HtmlWebPackPlugin({
             template: './src/index.html'
         }),

@@ -35,8 +35,8 @@ export default class Auth {
     this.auth0.authorize();
   }
 
-  handleAuthentication() {
-      return new Promise((resolve, reject) => {
+  handleAuthentication(successCallback) {
+      let promise =  new Promise((resolve, reject) => {
         this.auth0.parseHash((err, authResult) => {
           if (err) return reject(err);
           if (!authResult || !authResult.idToken) {
@@ -49,6 +49,7 @@ export default class Auth {
           resolve();
         });
       })      
+      promise.then(successCallback);
   }
 
   signOut() {

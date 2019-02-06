@@ -28,15 +28,17 @@ export default class Auth {
     history.replace('/authorise');
   }
 
-  handleAuthentication() {
-    return new Promise((resolve, reject) => {
+  handleAuthentication(successCallback) {
+    let promise =  new Promise((resolve, reject) => {
         var now = new Date();
         var expireyTime = new Date(now.getTime() + 1000*60*60*1); //1 hour
         this.idToken = null;
-        this.profile = {name:'galleries'};;
+        this.profile = {name:'boris'};;
         this.expiresAt = expireyTime;  
         resolve();
     });
+
+    promise.then(successCallback);
   }
 
   signOut() {

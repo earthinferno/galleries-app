@@ -11,10 +11,8 @@ export default class AddGallery extends React.Component {
             DescriptionValue: '',
         };
 
-        this.OnCreateGalleryClicked = this.OnCreateGalleryClicked.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.OnCreateGalleryClicked = this.OnCreateGalleryClicked.bind(this);
 
     }
 
@@ -30,42 +28,72 @@ export default class AddGallery extends React.Component {
     }
     
     handleSubmit(event) {
+        //data validation here maybe
+
+        // close modal
+        // TODO: replace bootstrap with reactbootstrap
+        $('#closeModalButton').click();
+
+        // initialse data object
         const data = {
             Name: this.state.NameValue,
             CreatedDate: new Date(),
             Description: this.state.DescriptionValue,
             userId: this.props.userId,
         }
+
         GalleryDataService.addGallery(data, galleryData => 
             this.props.onAddGallery(galleryData)
         );        
         event.preventDefault();
     }
     
-    OnCreateGalleryClicked()
-    {
-        let expanded = !this.state.AddGalleryExpanded;
-        this.setState({AddGalleryExpanded: expanded});
-    }
-
     render(){
-        const expanded = this.state.AddGalleryExpanded;
 
-        const form = <form onSubmit={this.handleSubmit}>
-                        <div>Name: <input name='NameValue' type='text' value={this.state.Namevalue} onChange={this.handleInputChange} /></div>
-                        <div>Description: <input name="DescriptionValue" type="text" value={this.state.Namevalue} onChange={this.handleInputChange} /></div>
-                        <input type="submit" value="Submit" />
-                    </form>;
+        const modal = 
+            <div className="modal fade" id="galleryModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                        <form onSubmit={this.handleSubmit}>
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Gallery Details</h5>
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>             
+                        </div>
+                        <div className="modal-body">
+                            <div className='form-row'>
+                                <label>Gallery Name</label>
+                                <input name='NameValue' type='text' className='form-control' value={this.state.Namevalue} onChange={this.handleInputChange} />
+                            </div>
+                            <div className='form-row'>
+                                <label>Description</label>
+                                <input name="DescriptionValue" type="text" className='form-control' value={this.state.Namevalue} onChange={this.handleInputChange} />
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" id="closeModalButton" className="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" className="btn btn-outline-primary" value="Submit"  >Save changes</button>
+                            
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>;
 
         return (
-            
 
-            <div>
-                <button onClick={this.OnCreateGalleryClicked}>{expanded ? 'Close' : 'Add Gallery'}</button>
-               
-                {expanded && form}
-                <div>
+            <div className="container">
+
+                <div className='row justify-content-center'>
+                    <div className='col-2'>
+                        <button type="button" className="btn btn-outline-primary" data-toggle="modal" data-target="#galleryModal">
+                            Add Gallery
+                        </button>
+                        {modal}
+                    </div>
                 </div>
+
             </div>
         );
     }

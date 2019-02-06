@@ -31,8 +31,8 @@ export default class GalleryHome extends React.Component {
     render(){
         return (
             <div>
-                <GalleryList galleries={this.state.galleries} userId={this.props.userId}/>
-                <AddGallery onAddGallery={this.refreshGalleryData} userId={this.props.userId}/>
+                <GalleryList galleries={this.state.galleries} userId={this.props.userId} {...this.props}/>
+                <AddGallery onAddGallery={this.refreshGalleryData} userId={this.props.userId} />
             </div>
             
             
