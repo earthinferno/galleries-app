@@ -39,6 +39,8 @@ export default class Auth {
     });
 
     promise.then(successCallback);
+    console.log("handleAuthentication");
+    return promise;
   }
 
   signOut() {
