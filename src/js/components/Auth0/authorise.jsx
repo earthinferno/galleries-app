@@ -51,7 +51,11 @@ class Authorise extends Component {
 
   render() {
     return (
-      <p>Loading profile...</p>
+      <div>
+        <p>Loading profile...</p>
+        <p>Please be patient the page will load. This is running on a free app service plan. </p>
+        <p>There is an excessive delay which the developer is investigating....</p>
+      </div>
     );
   }
 }
