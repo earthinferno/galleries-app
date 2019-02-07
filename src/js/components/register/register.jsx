@@ -19,6 +19,7 @@ export default class Register extends React.Component {
     
     componentDidMount() {
         console.log(this.props.identityProfile);
+        console.log("Register:componentDidMount"  + new Date());
     }
 
     handleInputChange()

@@ -29,14 +29,14 @@ class Authorise extends Component {
 }
 
   getUserAccount(userId){
-    console.log("getUserAccount");
+    console.log("getUserAccount" + new Date());
     Auth0DataService.getAccount(userId, data => 
          this.handleGetAccount(data), 
         );    
   }
   
   handleGetAccount(data){
-    console.log("handleGetAccount");
+    console.log("handleGetAccount"  + new Date());
     //sleep(1000); 
     // Was an account return. If not register the account details   
     if (data== null)
