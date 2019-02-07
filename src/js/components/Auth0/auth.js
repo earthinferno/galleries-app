@@ -49,7 +49,9 @@ export default class Auth {
           resolve();
         });
       })      
-      promise.then(successCallback);
+      promise.then(successCallback, err => alert("failure" + err.error));
+      console.log("handleAuthentication");
+      return promise;
   }
 
   signOut() {

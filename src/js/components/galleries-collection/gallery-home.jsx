@@ -17,6 +17,7 @@ export default class GalleryHome extends React.Component {
     }
 
     componentDidMount() {
+        console.log("GalleryHome:componentDidMount"  + new Date());
         GalleryDataService.getGalleriesData(this.state.userId, galleryData => 
             this.setState({galleries: galleryData})
         );

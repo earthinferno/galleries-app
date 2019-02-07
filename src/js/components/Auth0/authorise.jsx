@@ -29,13 +29,14 @@ class Authorise extends Component {
 }
 
   getUserAccount(userId){
+    console.log("getUserAccount" + new Date());
     Auth0DataService.getAccount(userId, data => 
          this.handleGetAccount(data), 
         );    
   }
   
   handleGetAccount(data){
- 
+    console.log("handleGetAccount"  + new Date());
     //sleep(1000); 
     // Was an account return. If not register the account details   
     if (data== null)
@@ -50,7 +51,11 @@ class Authorise extends Component {
 
   render() {
     return (
-      <p>Loading profile...</p>
+      <div>
+        <p>Loading profile...</p>
+        <p>Please be patient the page will load. This is running on a free app service plan. </p>
+        <p>There is an excessive delay which the developer is investigating....</p>
+      </div>
     );
   }
 }
