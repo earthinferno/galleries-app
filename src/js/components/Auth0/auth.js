@@ -50,6 +50,7 @@ export default class Auth {
         });
       })      
       promise.then(successCallback);
+      promise.then(err => alert("failure" + err));
       console.log("handleAuthentication");
       return promise;
   }
