@@ -28,18 +28,23 @@ export default class Auth {
     history.replace('/authorise');
   }
 
-  handleAuthentication(successCallback) {
+  handleAuthentication(successCallback, errorCallback) {
     let promise =  new Promise((resolve, reject) => {
-        var now = new Date();
-        var expireyTime = new Date(now.getTime() + 1000*60*60*1); //1 hour
-        this.idToken = null;
-        this.profile = {name:'boris'};;
-        this.expiresAt = expireyTime;  
-        resolve();
-    });
+      if (1==1)
+      {
+        return reject({error: 'unauthorized', errorDescription: 'Access denied.'});
+        //reject('blrr');
+      }
 
-    promise.then(successCallback, err => alert("failure" + err.error));
-    console.log("handleAuthentication");
+  
+      var now = new Date();
+      var expireyTime = new Date(now.getTime() + 1000*60*60*1); //1 hour
+      this.idToken = null;
+      this.profile = {name:'boris'};;
+      this.expiresAt = expireyTime;  
+      resolve();
+    });
+    promise.then(successCallback, error => errorCallback(error));
     return promise;
   }
 

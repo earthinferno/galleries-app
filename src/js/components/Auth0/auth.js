@@ -35,7 +35,7 @@ export default class Auth {
     this.auth0.authorize();
   }
 
-  handleAuthentication(successCallback) {
+  handleAuthentication(successCallback, errorCallback) {
       let promise =  new Promise((resolve, reject) => {
         this.auth0.parseHash((err, authResult) => {
           if (err) return reject(err);
@@ -49,7 +49,7 @@ export default class Auth {
           resolve();
         });
       })      
-      promise.then(successCallback, err => alert("failure" + err.error));
+      promise.then(successCallback, error => errorCallback(error));
       console.log("handleAuthentication");
       return promise;
   }
