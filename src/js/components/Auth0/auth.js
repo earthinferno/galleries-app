@@ -66,6 +66,7 @@ export default class Auth {
     this.accessToken = null;
     this.idToken = null;
     this.expiresAt = 0;
+    this.profile = null;
 
     // Remove isLoggedIn flag from localStorage
     localStorage.removeItem('isLoggedIn');    
@@ -79,6 +80,7 @@ export default class Auth {
     let expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
+    this.profile = authResult.idTokenPayload;
     this.expiresAt = expiresAt;
 
   }
