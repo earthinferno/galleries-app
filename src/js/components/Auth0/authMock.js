@@ -35,11 +35,21 @@ export default class Auth {
         return reject({error: 'unauthorized', errorDescription: 'Access denied.'});
       }
   
-      var now = new Date();
-      var expireyTime = new Date(now.getTime() + 1000*60*60*1); //1 hour
-      this.idToken = null;
-      this.profile = {name:'boris'};;
-      this.expiresAt = expireyTime;  
+      let authResult = {
+        accessToken: 111,
+        idToken: null,
+        idTokenPayload: {
+            // what value should this be?
+            exp: 1, 
+            name: 'boris'
+        }
+      }
+      this.setSession(authResult);
+      //var now = new Date();
+      //var expireyTime = new Date(now.getTime() + 1000*60*60*1); //1 hour
+      // this.idToken = null;
+      // this.profile = {name:'boris'};;
+      // this.expiresAt = expireyTime;  
       resolve();
     });
     promise.then(successCallback, error => errorCallback(error));
@@ -51,6 +61,23 @@ export default class Auth {
     this.idToken = null;
     this.profile = null;
     this.expiresAt = null;
+    this.profile = null;
+
+    // Remove isLoggedIn flag from localStorage
+    localStorage.removeItem('isLoggedIn');        
   }
+
+  setSession(authResult) {
+    // Set isLoggedIn flag in localStorage
+    localStorage.setItem('isLoggedIn', 'true');
+
+    // Set the time that the access token will expire at
+    let expiresAt = (authResult.idTokenPayload.exp * 1000) + new Date().getTime();
+    this.accessToken = authResult.accessToken;
+    this.idToken = authResult.idToken;
+    this.profile = authResult.idTokenPayload;
+    this.expiresAt = expiresAt;
+
+  }  
 }
 
