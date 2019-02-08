@@ -30,12 +30,10 @@ export default class Auth {
 
   handleAuthentication(successCallback, errorCallback) {
     let promise =  new Promise((resolve, reject) => {
-      if (1==1)
+      if (1==2)
       {
         return reject({error: 'unauthorized', errorDescription: 'Access denied.'});
-        //reject('blrr');
       }
-
   
       var now = new Date();
       var expireyTime = new Date(now.getTime() + 1000*60*60*1); //1 hour

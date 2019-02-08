@@ -17,6 +17,7 @@ export default class Auth {
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.login = this.signIn.bind(this);
     this.logout = this.signOut.bind(this);
+    this.setSession = this.setSession.bind(this);
   }
 
   getProfile() {
@@ -42,10 +43,11 @@ export default class Auth {
           if (!authResult || !authResult.idToken) {
             return reject(err);
           }
-          this.idToken = authResult.idToken;
-          this.profile = authResult.idTokenPayload;
-          // set the time that the id token will expire at
-          this.expiresAt = authResult.idTokenPayload.exp * 1000;
+          // this.idToken = authResult.idToken;
+          // this.profile = authResult.idTokenPayload;
+          // // set the time that the id token will expire at
+          // this.expiresAt = authResult.idTokenPayload.exp * 1000;
+          this.setSession(authResult);
           resolve();
         });
       })      
@@ -55,10 +57,30 @@ export default class Auth {
   }
 
   signOut() {
-    // clear id token, profile, and expiration
+    // // clear id token, profile, and expiration
+    // this.idToken = null;
+    // this.profile = null;
+    // this.expiresAt = null;
+
+    // Remove tokens and expiry time
+    this.accessToken = null;
     this.idToken = null;
-    this.profile = null;
-    this.expiresAt = null;
+    this.expiresAt = 0;
+
+    // Remove isLoggedIn flag from localStorage
+    localStorage.removeItem('isLoggedIn');    
+  }
+
+  setSession(authResult) {
+    // Set isLoggedIn flag in localStorage
+    localStorage.setItem('isLoggedIn', 'true');
+
+    // Set the time that the access token will expire at
+    let expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
+    this.accessToken = authResult.accessToken;
+    this.idToken = authResult.idToken;
+    this.expiresAt = expiresAt;
+
   }
 }
 
