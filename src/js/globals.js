@@ -15,7 +15,6 @@ if (process.env.NODE_ENV === 'development') {
     baseapiurl = "http://localhost:60782";
     auth0Client = new AuthMock(baseuri);
     
-    
 } else if (process.env.NODE_ENV == 'production') {
     baseuri = "https://galleries247b.azurewebsites.net";
     baseapiurl = "https://galleriesserver247.azurewebsites.net";
