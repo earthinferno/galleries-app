@@ -17,6 +17,7 @@ export default class Auth {
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.login = this.signIn.bind(this);
     this.logout = this.signOut.bind(this);
+    this.setSession = this.setSession.bind(this);
   }
 
   getProfile() {
@@ -35,30 +36,53 @@ export default class Auth {
     this.auth0.authorize();
   }
 
-  handleAuthentication(successCallback) {
+  handleAuthentication(successCallback, errorCallback) {
       let promise =  new Promise((resolve, reject) => {
         this.auth0.parseHash((err, authResult) => {
           if (err) return reject(err);
           if (!authResult || !authResult.idToken) {
             return reject(err);
           }
-          this.idToken = authResult.idToken;
-          this.profile = authResult.idTokenPayload;
-          // set the time that the id token will expire at
-          this.expiresAt = authResult.idTokenPayload.exp * 1000;
+          // this.idToken = authResult.idToken;
+          // this.profile = authResult.idTokenPayload;
+          // // set the time that the id token will expire at
+          // this.expiresAt = authResult.idTokenPayload.exp * 1000;
+          this.setSession(authResult);
           resolve();
         });
       })      
-      promise.then(successCallback, err => alert("failure" + err.error));
+      promise.then(successCallback, error => errorCallback(error));
       console.log("handleAuthentication");
       return promise;
   }
 
   signOut() {
-    // clear id token, profile, and expiration
+    // // clear id token, profile, and expiration
+    // this.idToken = null;
+    // this.profile = null;
+    // this.expiresAt = null;
+
+    // Remove tokens and expiry time
+    this.accessToken = null;
     this.idToken = null;
+    this.expiresAt = 0;
     this.profile = null;
-    this.expiresAt = null;
+
+    // Remove isLoggedIn flag from localStorage
+    localStorage.removeItem('isLoggedIn');    
+  }
+
+  setSession(authResult) {
+    // Set isLoggedIn flag in localStorage
+    localStorage.setItem('isLoggedIn', 'true');
+
+    // Set the time that the access token will expire at
+    let expiresAt = (authResult.idTokenPayload.exp * 1000) + new Date().getTime();
+    this.accessToken = authResult.accessToken;
+    this.idToken = authResult.idToken;
+    this.profile = authResult.idTokenPayload;
+    this.expiresAt = expiresAt;
+
   }
 }
 
