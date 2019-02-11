@@ -5,7 +5,7 @@ export default class Auth {
     this.auth0 = new auth0.WebAuth({
       // the following three lines MUST be updated
       domain: '88galleries88state.eu.auth0.com',
-      // audience: 'https://88galleries88state.eu.auth0.com/userinfo',
+      audience: 'https://88galleries88state.eu.auth0.com/userinfo',
       clientID: 'ySDhFb8l20IORZItgTf5v5AjVfbU6WVj',
       redirectUri: uri + '/authorise',
       responseType: 'token id_token',
