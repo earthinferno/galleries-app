@@ -5,10 +5,10 @@ export default class Auth {
     this.auth0 = new auth0.WebAuth({
       // the following three lines MUST be updated
       domain: '88galleries88state.eu.auth0.com',
-      audience: 'https://88galleries88state.eu.auth0.com/userinfo',
+      // audience: 'https://88galleries88state.eu.auth0.com/userinfo',
       clientID: 'ySDhFb8l20IORZItgTf5v5AjVfbU6WVj',
       redirectUri: uri + '/authorise',
-      responseType: 'id_token',
+      responseType: 'token id_token',
       scope: 'openid profile'
     });
 
@@ -77,16 +77,15 @@ export default class Auth {
     localStorage.setItem('isLoggedIn', 'true');
 
     // Set the time that the access token will expire at
-    let expiresAt = (authResult.idTokenPayload.exp * 1000) + new Date().getTime();
+    //let expiresAt = (authResult.idTokenPayload.exp * 1000) + new Date().getTime();
+    let expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
+    this.expiresAt = expiresAt;
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     this.profile = authResult.idTokenPayload;
-    this.expiresAt = expiresAt;
+
 
   }
 }
-
-//const auth0Client = new Auth();
-//export default auth0Client;
 
 
