@@ -15,13 +15,16 @@ if (process.env.NODE_ENV === 'development') {
     baseapiurl = "http://localhost:60782";
     auth0Client = new AuthMock(baseuri);
     
-} else if (process.env.NODE_ENV === 'production') {
+} 
+if (process.env.env === 'production') {
     baseuri = "https://galleries247b.azurewebsites.net";
     baseapiurl = "https://galleriesserver247.azurewebsites.net";
     auth0Client = new Auth(baseuri);
     
-} else if (process.env.NODE_ENV === 'preprod') {
+} 
+if (process.env.env === 'preprod') {
     baseuri = "https://galleries-dev-client.azurewebsites.net";
+    //baseuri = "YYYYYYYYYYYYYYYYYYYY";
     baseapiurl = "https://galleries-dev-server.azurewebsites.net";
     auth0Client = new Auth(baseuri);
 }
