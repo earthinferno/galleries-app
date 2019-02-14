@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cross-env NODE_ENV=development webpack-dev-server --mode development --devtool inline-source-map",
+    "build:preprod": "cross-env NODE_ENV=preprod webpack --mode production", 
     "build:prod": "cross-env NODE_ENV=production webpack --mode production"
   },
   "author": "",
