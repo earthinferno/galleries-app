@@ -3,6 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CleanWebPackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
+//const DotEnv = require('dotenv-webpack');
 
 module.exports = {
     entry: ['babel-polyfill','./src/js/index.js'],

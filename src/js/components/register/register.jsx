@@ -75,7 +75,7 @@ export default class Register extends React.Component {
                 {/* user name */}
                 <div className='form-group'>
                     <label >Username </label>
-                    <input type='text' readonly className='form-control' name='UserName' value={this.props.userId} placeholder={this.props.userId}/>        
+                    <input type='text' readOnly className='form-control' name='UserName' value={this.props.userId} placeholder={this.props.userId}/>        
                 </div>
 
                 {/* Email Address:  */}
