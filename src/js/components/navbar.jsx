@@ -8,7 +8,8 @@ function NavBar(props) {
     const signOut = () => {
         auth0Client.logout();
         props.history.replace('/logout');
-        props.history.replace('/');
+        console.log('redirect=/logout');
+        //props.history.replace('/');
     };
 
     const login = () => {
