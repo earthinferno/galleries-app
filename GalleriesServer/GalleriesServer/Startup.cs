@@ -61,6 +61,11 @@ namespace GalleriesServer
                     builder.WithOrigins("http://localhost:8080").AllowAnyMethod().AllowAnyHeader());
 
             }
+            else if(env.IsEnvironment("AZURE_DEV"))
+            {
+                app.UseCors(builder =>
+                    builder.WithOrigins("https://prodgalleries247client.azurewebsites.net").AllowAnyMethod().AllowAnyHeader());
+            }
             else
             {
                 app.UseCors(builder =>

@@ -7,7 +7,9 @@ import welcome from './../../images/welcome-message.png';
 function NavBar(props) {
     const signOut = () => {
         auth0Client.logout();
-        props.history.replace('/');
+        props.history.replace('/logout');
+        console.log('redirect=/logout');
+        //props.history.replace('/');
     };
 
     const login = () => {
