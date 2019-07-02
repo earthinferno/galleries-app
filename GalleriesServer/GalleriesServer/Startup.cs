@@ -69,7 +69,7 @@ namespace GalleriesServer
             else
             {
                 app.UseCors(builder =>
-                    builder.WithOrigins("https://galleries247b.azurewebsites.net").AllowAnyMethod().AllowAnyHeader());
+                    builder.WithOrigins("https://prodgalleries247client.azurewebsites.net").AllowAnyMethod().AllowAnyHeader());
             }
 
             app.UseMvc();
