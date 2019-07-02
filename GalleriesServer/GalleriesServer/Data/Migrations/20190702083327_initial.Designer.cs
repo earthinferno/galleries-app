@@ -11,7 +11,7 @@ using System;
 namespace GalleriesServer.Data.Migrations
 {
     [DbContext(typeof(GalleriesDbContext))]
-    [Migration("20190129163414_initial")]
+    [Migration("20190702083327_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
