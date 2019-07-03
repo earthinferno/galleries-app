@@ -64,7 +64,7 @@ namespace GalleriesServer
             else if(env.IsEnvironment("AZURE_DEV"))
             {
                 app.UseCors(builder =>
-                    builder.WithOrigins("https://prodgalleries247client.azurewebsites.net").AllowAnyMethod().AllowAnyHeader());
+                    builder.WithOrigins("https://devgalleries247client.azurewebsites.net").AllowAnyMethod().AllowAnyHeader());
             }
             else
             {
