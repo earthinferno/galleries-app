@@ -35,7 +35,7 @@
         processData: false,
         method: 'Post',
         success:  function(data, status){
-          callback(data);
+          callback();
         }
       });
     }
