@@ -13,7 +13,7 @@ export default class AddImage extends React.Component{
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fileInput = React.createRef();
-    this.form = React.createRef;
+    this.form = React.createRef();
   }
 
 
@@ -22,7 +22,7 @@ export default class AddImage extends React.Component{
   {
     event.preventDefault();
 
-    var mediaFiles = new FormData(this.form);
+    var mediaFiles = new FormData();
     mediaFiles.append('File',this.fileInput.current.files[0]);
     mediaFiles.append('Comment',this.state.Comment);
     mediaFiles.append('UserFolder',this.props.galleryName);
