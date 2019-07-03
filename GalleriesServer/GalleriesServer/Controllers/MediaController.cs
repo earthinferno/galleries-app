@@ -138,7 +138,8 @@ namespace GalleriesServer.Controllers
             }
 
             await _dbContext.SaveChangesAsync();
-            return CreatedAtAction("GetItems", new { galleryId = mediaContainer.ID, owner = mediaContainer.Owner.ID}, mediaContainer.MediaItems);
+            //return CreatedAtAction("GetItems", new { galleryId = mediaContainer.ID, owner = mediaContainer.Owner.ID}, mediaContainer.MediaItems);
+            return NoContent();
         }
 
         /// <summary>

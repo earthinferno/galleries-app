@@ -29,7 +29,7 @@ export default class AddImage extends React.Component{
     mediaFiles.append('UserId',this.props.userId);
 
 
-    ImageDataService.addImage(mediaFiles, data => 
+    ImageDataService.addImage(mediaFiles, () => 
       this.props.onImagesChange());
   }
 
