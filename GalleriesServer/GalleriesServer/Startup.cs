@@ -35,6 +35,9 @@ namespace GalleriesServer
             services.AddDbContext<GalleriesDbContext>(options =>
                             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            //services.AddDbContext<GalleriesDbContext>(options =>
+            //   options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+
             services.AddTransient<OwnerService>();
             services.AddTransient<MediaContainerService>();
             services.AddTransient<MediaItemService>();
