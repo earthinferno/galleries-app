@@ -46,7 +46,7 @@
     "auth0-js": "^9.8.2",
     "bootstrap": "^4.2.1",
     "history": "^4.7.2",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "popper": "^1.0.1",
     "react": "^16.6.3",
     "react-bootstrap": "^0.32.4",
